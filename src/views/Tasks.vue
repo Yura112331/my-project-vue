@@ -1,14 +1,14 @@
 <template lang="pug">
 .body-content
-  h2 Test
+  h2 TASKS
   .block(v-for="(item, i) in tasks", :key="'tasks' + i")
+    h3 {{ i + 1 + '.' + ' ' + item.name }}
+    i(
+      :style="{ backgroundImage: 'url(' + require('../assets/' + item.icon + '.png') + ')' }"
+    )
     p {{ item.text }}
-    .images(v-if="item.imgs")
-      img(
-        v-for="(img, i1) in item.imgs",
-        :src="getImage(img)",
-        :key="'tasks-img' + i1",
-      )
+    .data {{ item.data }}
+    .alt {{ item.alt }}
 </template>
 
 <script>
@@ -20,23 +20,42 @@ export default defineComponent({
     return {
       tasks: [
         {
-          text: "Keep your to-do list in Salesforce and stay right on top of your deals and accounts. Easily relate every task to records for leads, contacts, campaigns, contracts, and other information that you need. Salesforce gives you different tools to maximize productivity—quick ways to create and update tasks, prefiltered task lists, and task notification options.",
-          imgs: ["task-img.jpg", "task-img1.jpg", "task-img.jpg", "task-img1.jpg"],
+          name: "Understand Vue",
+          icon: "check-mark",
+          text: "Make a project using vue js.",
+          data: "24.11.2021",
+          alt: "Done",
         },
         {
-          text: "Keep your to-do list in Salesforce and stay right on top of your deals and accounts. Easily relate every task to records for leads, contacts, campaigns, contracts, and other information that you need. Salesforce gives you different tools to maximize productivity—quick ways to create and update tasks, prefiltered task lists, and task notification options.",
+          name: "Migration",
+          icon: "check-mark",
+          text: "Transfer data from the old project.",
+          data: "24.11.2021",
+          alt: "Done",
         },
         {
-          
-          text: "Keep your to-do list in Salesforce and stay right on top of your deals and accounts. Easily relate every task to records for leads, contacts, campaigns, contracts, and other information that you need. Salesforce gives you different tools to maximize productivity—quick ways to create and update tasks, prefiltered task lists, and task notification options.",
+          name: "Array",
+          icon: "check-mark",
+          text: "Move Tasks content into an array.",
+          data: "25.11.2021",
+          alt: "Done",
+        },
+        {
+          name: "GitHub",
+          icon: "check-mark",
+          text: "Сreate repository on GitHub",
+          data: "26.11.2021",
+          alt: "Done",
+        },
+        {
+          name: "Delivery of the assignment",
+          icon: "mark",
+          text: "Unsubscribe for the completed task",
+          data: "26.11.2021",
+          alt: "In process",
         },
       ],
     };
-  },
-  methods: {
-    getImage(img) {
-      return require("@/assets/" + img);
-    },
   },
 });
 </script>
@@ -47,20 +66,19 @@ export default defineComponent({
 .body-content {
   margin: auto;
   width: 700px;
-  height: 540px;
-  background: #9dbe60;
+  height: 440px;
+  background: #c9d6b1;
   border-radius: 8px;
-  padding-left: 30px;
+  padding: 30px;
 
   h2 {
-    padding-top: 35px;
     opacity: 0.5;
     font-family: Helvetica;
-    font-size: 14px;
+    font-size: 18px;
     color: #131313;
     width: 45px;
     height: 19px;
-    margin: 30px 0px 25px;
+    margin: 5px 0px 25px;
     letter-spacing: 1px;
 
     @media (max-width: 768px) {
@@ -77,33 +95,83 @@ export default defineComponent({
     flex-wrap: wrap;
     margin: 25px 0px;
 
+    h3 {
+      margin: 0px;
+      width: 100%;
+      margin-left: 5px;
+      padding-bottom: 10px;
+
+      @media (max-width: 768px) {
+        margin: 0px;
+      }
+      
+    }
+    i {
+      background-size: 12px;
+      background-repeat: no-repeat;
+      width: 12px;
+      height: 12px;
+      margin: 5px;
+    }
+
     p {
       font-family: Helvetica;
       font-size: 16px;
       color: #131313;
       line-height: 20px;
       margin: 0px;
-      width: 660px;
+      width: 450px;
+      margin: 0px;
 
       @media (max-width: 768px) {
         font-size: 13px;
+        width: 200px;
+      }
+      @media (max-width: 425px) {
+        font-size: 12px;
+        width: 100px;
       }
     }
 
-    .images {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    cursor: pointer;
-    width: 500px;
-    margin-top: 25px;
+    .data,
+    .alt {
+      font-family: Helvetica;
+      font-size: 16px;
+      color: #131313;
+      line-height: 20px;
 
-    img {
-      width: 90px;
-      height: 90px;
-      border-radius: 8px;
+      @media (max-width: 425px) {
+        font-size: 12px;
+      }
     }
+
+    .alt {
+      width: 80px;
+      text-align: center;
+    }
+    @media (max-width: 768px) {
+      height: auto;
+      width: 400px;
+    }
+    @media (max-width: 425px) {
+    width: 265px;
   }
+  }
+  @media (max-width: 870px) {
+    width: 630px;
+  }
+
+  @media (max-height: 800px) {
+    height: 520px;
+  }
+  @media (max-width: 768px) {
+    height: auto;
+    padding: 10px 0px 10px 30px;
+    width: 440px;
+  }
+  @media (max-width: 425px) {
+    width: 265px;
+    padding: 0px 0px 0px 5px;
   }
 }
 </style> 
