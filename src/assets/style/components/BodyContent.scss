@@ -1,0 +1,35 @@
+@import "../helpers/variables.scss";
+.body-content {
+    margin: auto;
+    width: 690px;
+    height: 591px;
+    background: $white;
+    border-radius: 8px;
+    padding-left: 10px;
+    h2 {
+      padding-top: 35px;
+      opacity: 0.5;
+      font-family: Helvetica;
+      font-size: 14px;
+      color: $black;
+      width: 45px;
+      height: 19px;
+      margin: 30px 25px 25px;
+      letter-spacing: 1px;
+      @media (max-width: 768px) {
+        margin: 0px;
+        padding-top: 10px;
+      }
+    }
+    @media (max-height: 800px) {
+      height: 520px;
+    }
+    @media (max-width: 768px) {
+      width: 440px;
+      height: 100%;
+      margin: 0px;
+    }
+    @media (max-width: 425px) {
+      width: 100%;
+    }
+  }

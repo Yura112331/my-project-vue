@@ -63,34 +63,24 @@ export default defineComponent({
 
 
 <style scoped lang="scss">
+@import "../assets/style/helpers/variables.scss";
+@import "../assets/style/helpers/mixins.scss";
+@import "../assets/style/components/BodyContent.scss";
+
 .body-content {
-  margin: auto;
   width: 700px;
   height: 440px;
   background: #c9d6b1;
-  border-radius: 8px;
   padding: 30px;
 
   h2 {
-    opacity: 0.5;
-    font-family: Helvetica;
     font-size: 18px;
-    color: #131313;
-    width: 45px;
-    height: 19px;
     margin: 5px 0px 25px;
-    letter-spacing: 1px;
-
-    @media (max-width: 768px) {
-      margin: 0px;
-      padding-top: 10px;
-    }
   }
-
+  
   .block {
-    display: flex;
+    @include flex;
     flex-direction: row;
-    justify-content: space-between;
     width: 680px;
     flex-wrap: wrap;
     margin: 25px 0px;
@@ -104,7 +94,6 @@ export default defineComponent({
       @media (max-width: 768px) {
         margin: 0px;
       }
-      
     }
     i {
       background-size: 12px;
@@ -115,9 +104,9 @@ export default defineComponent({
     }
 
     p {
-      font-family: Helvetica;
+      font-family: $helv;
       font-size: 16px;
-      color: #131313;
+      color: $black;
       line-height: 20px;
       margin: 0px;
       width: 450px;
@@ -135,9 +124,9 @@ export default defineComponent({
 
     .data,
     .alt {
-      font-family: Helvetica;
+      font-family: $helv;
       font-size: 16px;
-      color: #131313;
+      color: $black;
       line-height: 20px;
 
       @media (max-width: 425px) {
@@ -154,24 +143,8 @@ export default defineComponent({
       width: 400px;
     }
     @media (max-width: 425px) {
-    width: 265px;
-  }
-  }
-  @media (max-width: 870px) {
-    width: 630px;
-  }
-
-  @media (max-height: 800px) {
-    height: 520px;
-  }
-  @media (max-width: 768px) {
-    height: auto;
-    padding: 10px 0px 10px 30px;
-    width: 440px;
-  }
-  @media (max-width: 425px) {
-    width: 265px;
-    padding: 0px 0px 0px 5px;
+      width: 265px;
+    }
   }
 }
 </style> 
