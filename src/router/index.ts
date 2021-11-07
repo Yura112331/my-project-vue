@@ -4,31 +4,27 @@ import Activity from '../views/Activity.vue'
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/tasks',
-    name: 'tasks',
-    
+    name: 'Tasks',
     component: () => import('../views/Tasks.vue')
   },
   {
     path: '/kanban',
-    name: 'kanban',
-    
+    name: 'Kanban',
     component: () => import('../views/Kanban.vue')
   },
   {
-    path: '/activity',
-    name: 'activity',
+    path: '/',
+    name: 'Activity',
     component: Activity
   },
   {
     path: '/calendar',
-    name: 'calendar',
-    
+    name: 'Calendar',
     component: () => import('../views/Calendar.vue')
   },
   {
     path: '/files',
-    name: 'files',
-    
+    name: 'Files',
     component: () => import('../views/Files.vue')
   }
 ]

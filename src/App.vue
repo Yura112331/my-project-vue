@@ -21,8 +21,9 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "/assets/style/fonts/fonts.scss";
+@import "/assets/style/helpers/reset.scss";
 .main-page {
   width: 100%;
   max-height: 100vh;

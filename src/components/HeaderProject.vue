@@ -15,40 +15,15 @@ header
       button.share Share
       button.chat Chat
   nav.interface
-    ul
-      li
-        router-link.link(to="/tasks") Tasks
-      li
-        router-link.link(to="/kanban") Kanban
-      li
-        router-link.link.activity(to="/activity") Activity
-      li 
-        router-link.link(to="/calendar") Calendar
-      li 
-        router-link.link(to="/files") Files
+    - const dataRoute = { Tasks: '/tasks', Kanban: '/Kanban', Activity: '/', Calendar: '/Calendar', Files: '/Files' };
+    each path, name in dataRoute
+      router-link.link(to=`${path}`, active-class="linkActive")= `${name}`
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "HeaderProject",
-
-  mounted() {
-    let allNavItems = document.querySelectorAll(".link");
-    allNavItems.forEach((currentValue: any) => {
-      return currentValue.addEventListener("click", this.makeActive);
-    });
-  },
-  methods: {
-    makeActive(e: any) {
-      let currentElement = e.target;
-      let currentActive = document.querySelector(".activity");
-      if (currentActive) {
-        currentActive.classList.remove("activity");
-        currentElement.classList.add("activity");
-      }
-    },
-  },
 });
 </script>
 
@@ -219,36 +194,23 @@ header {
     }
   }
   .interface {
-    margin: 18px 30px;
+    margin: 18px 30px 0px;
     max-width: 401px;
-    ul {
-      @include flex;
+    @include flex;
 
-      a {
-        text-decoration: none;
-        opacity: 0.7;
-        font-family: Helvetica;
-        font-size: 16px;
-        color: $black;
-      }
-      @media (max-width: 425px) {
-        justify-content: space-around;
-      }
-    }
-    .activity {
-      position: relative;
-      font-family: $helv;
+    .link {
+      text-decoration: none;
+      opacity: 0.7;
+      font-family: Helvetica;
       font-size: 16px;
       color: $black;
-      &::after {
-        @include content;
-        width: 55px;
-        height: 2px;
-        background: #ffc200;
-        top: 34px;
-        left: -1px;
-      }
+      padding-bottom: 22px;
     }
+
+    .linkActive {
+      border-bottom: 2px solid #ffc200;
+    }
+
     @media (max-width: 768px) {
       display: flex;
       flex-direction: column;
