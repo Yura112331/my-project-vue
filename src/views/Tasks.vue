@@ -70,7 +70,7 @@ export default defineComponent({
 .body-content {
   width: 700px;
   height: 440px;
-  background: #c9d6b1;
+  background: #c0eee6;
   padding: 30px;
 
   h2 {
