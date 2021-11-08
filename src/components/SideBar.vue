@@ -56,14 +56,6 @@ export default defineComponent({
         }
       }
     },
-    /* numberCompletedTasks(number: any) {
-      if (Number(this.OpenTasks) > 0) {
-        if (confirm("Are you sure you want to change the number of tasks?")) {
-          this.CompletedTasks = this.CompletedTasks + 1;
-          this.OpenTasks = this.OpenTasks - 1;
-        }
-      }
-    }, */
   },
 });
 </script>
