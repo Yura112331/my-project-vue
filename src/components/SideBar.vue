@@ -12,7 +12,7 @@ section.general-menu
         .dot
     .tasks
       .completed
-        h2(v-on:click="NumberCompletedTasks()") {{ CompletedTasks }}
+        h2(@click="setTasks") {{ CompletedTasks }}
         p Completed Tasks
       #open
         h2 {{ OpenTasks }}
@@ -34,23 +34,36 @@ section.general-menu
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "SideBar",
-  
+  props: {
+    notification: {
+      type: Number,
+      default: 3,
+    },
+  },
+
   data() {
     return {
-      notification: 3,
       CompletedTasks: 372,
       OpenTasks: 11,
     };
   },
   methods: {
-    NumberCompletedTasks(number: any) {
+    setTasks: function () {
+      if (Number(this.OpenTasks) > 0) {
+        if (confirm("Are you sure you want to change the number of tasks?")) {
+          this.CompletedTasks += 1;
+          this.OpenTasks -= 1;
+        }
+      }
+    },
+    /* numberCompletedTasks(number: any) {
       if (Number(this.OpenTasks) > 0) {
         if (confirm("Are you sure you want to change the number of tasks?")) {
           this.CompletedTasks = this.CompletedTasks + 1;
           this.OpenTasks = this.OpenTasks - 1;
         }
       }
-    },
+    }, */
   },
 });
 </script>
