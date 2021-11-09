@@ -3,16 +3,10 @@ section.general-menu
   .projectus
     h1 PROJECTUS
   section.body
-    .product-owner
-      p.name Jean Gonzales
-      p.owner Product Owner
-      .dot-block
-        .dot
-        .dot
-        .dot
+    ProfileSideBar
     .tasks
-      .completed
-        h2(@click="setTasks") {{ CompletedTasks }}
+      .completed(@click="setTasks") 
+        h2 {{ CompletedTasks }}
         p Completed Tasks
       #open
         h2 {{ OpenTasks }}
@@ -32,8 +26,12 @@ section.general-menu
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import ProfileSideBar from "@/components/ProfileSideBar.vue";
 export default defineComponent({
   name: "SideBar",
+  components: {
+    ProfileSideBar,
+  },
   props: {
     notification: {
       type: Number,
@@ -62,7 +60,6 @@ export default defineComponent({
 
 <style scoped lang="scss">
 @import "../assets/style/helpers/mixins.scss";
-@import "../assets/style/helpers/variables.scss";
 @import "../assets/style/helpers/reset.scss";
 .general-menu {
   position: relative;
@@ -73,9 +70,9 @@ export default defineComponent({
     h1 {
       position: relative;
       padding: 30px 65px;
-      font-family: $helv;
+      font-family: Helvetica;
       font-size: 16px;
-      color: $white;
+      color: #ffffff;
       line-height: 24px;
       width: 87px;
       height: 24px;
@@ -117,9 +114,9 @@ export default defineComponent({
       background: #202020;
       .name {
         position: relative;
-        font-family: $helv;
+        font-family: Helvetica;
         font-size: 14px;
-        color: $white;
+        color: #ffffff;
         line-height: 17px;
         &::before {
           @include content;
@@ -141,7 +138,7 @@ export default defineComponent({
       }
       .owner {
         margin-top: 2px;
-        font-family: $helv;
+        font-family: Helvetica;
         font-size: 12px;
         color: #9b9b9b;
         line-height: 14px;
@@ -187,9 +184,9 @@ export default defineComponent({
         width: 35px;
         height: 27px;
         line-height: 24px;
-        font-family: $helv;
+        font-family: Helvetica;
         font-size: 20px;
-        color: $white;
+        color: #ffffff;
         @media (max-width: 425px) {
           font-size: 15px;
         }
@@ -197,9 +194,9 @@ export default defineComponent({
       p {
         line-height: 14px;
         opacity: 0.5;
-        font-family: $helv;
+        font-family: Helvetica;
         font-size: 12px;
-        color: $white;
+        color: #ffffff;
         @media (max-width: 425px) {
           font-size: 10px;
         }
@@ -220,7 +217,7 @@ export default defineComponent({
         @include flex;
         flex-direction: column;
         .menu {
-          font-family: $helv;
+          font-family: Helvetica;
           font-size: 12px;
           color: #878787;
           line-height: 18px;
@@ -229,9 +226,9 @@ export default defineComponent({
           }
         }
         a {
-          font-family: $helv;
+          font-family: Helvetica;
           font-size: 14px;
-          color: $white;
+          color: #ffffff;
           line-height: 22px;
           text-decoration: none;
           @media (max-width: 425px) {
@@ -250,9 +247,9 @@ export default defineComponent({
             height: 20px;
             background-color: #ffc200;
             border-radius: 10px;
-            font-family: $helv;
+            font-family: Helvetica;
             font-size: 13px;
-            color: $black;
+            color: #131313;
             @media (max-width: 425px) {
               font-size: 11px;
               width: 15px;

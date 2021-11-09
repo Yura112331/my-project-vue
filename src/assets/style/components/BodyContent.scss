@@ -1,9 +1,8 @@
-@import "../helpers/variables.scss";
 .body-content {
     margin: auto;
     width: 690px;
     height: 591px;
-    background: $white;
+    background: #ffffff;
     border-radius: 8px;
     padding-left: 10px;
     h2 {
@@ -11,7 +10,7 @@
       opacity: 0.5;
       font-family: Helvetica;
       font-size: 14px;
-      color: $black;
+      color: #131313;
       width: 45px;
       height: 19px;
       margin: 30px 25px 25px;

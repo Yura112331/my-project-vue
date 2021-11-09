@@ -58,7 +58,6 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import "../assets/style/helpers/variables.scss";
 @import "../assets/style/helpers/mixins.scss";
 @import "../assets/style/components/BodyContent.scss";
 .messages {
@@ -94,9 +93,9 @@ export default defineComponent({
     background-color: #e3efff;
   }
   p {
-    font-family: $helv;
+    font-family: Helvetica;
     font-size: 16px;
-    color: $black;
+    color: #131313;
     line-height: 20px;
     margin: 0px;
     width: 445px;
@@ -123,9 +122,9 @@ export default defineComponent({
   }
   .time {
     opacity: 0.7;
-    font-family: $helv;
+    font-family: Helvetica;
     font-size: 14px;
-    color: $black;
+    color: #131313;
     line-height: 20px;
     @media (max-width: 768px) {
       font-size: 12px;
@@ -133,9 +132,9 @@ export default defineComponent({
   }
   .commit {
     width: 496px;
-    font-family: $helv;
+    font-family: Helvetica;
     font-size: 15px;
-    color: $black;
+    color: #131313;
     background: #f7f6f3;
     border-radius: 10px;
     padding: 20px 20px;

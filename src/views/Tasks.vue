@@ -60,10 +60,7 @@ export default defineComponent({
 });
 </script>
 
-
-
 <style scoped lang="scss">
-@import "../assets/style/helpers/variables.scss";
 @import "../assets/style/helpers/mixins.scss";
 @import "../assets/style/components/BodyContent.scss";
 
@@ -71,7 +68,8 @@ export default defineComponent({
   width: 700px;
   height: 440px;
   background: #c0eee6;
-  padding: 30px;
+  padding: 0px 30px;
+  margin-top: 30px;
 
   h2 {
     font-size: 18px;
@@ -104,9 +102,9 @@ export default defineComponent({
     }
 
     p {
-      font-family: $helv;
+      font-family: Helvetica;
       font-size: 16px;
-      color: $black;
+      color: #131313;
       line-height: 20px;
       margin: 0px;
       width: 450px;
@@ -124,9 +122,9 @@ export default defineComponent({
 
     .data,
     .alt {
-      font-family: $helv;
+      font-family: Helvetica;
       font-size: 16px;
-      color: $black;
+      color: #131313;
       line-height: 20px;
 
       @media (max-width: 425px) {

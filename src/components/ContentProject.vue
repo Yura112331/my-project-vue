@@ -21,7 +21,7 @@ export default defineComponent({
 .body {
   height: calc(100vh - 158px);
   background-color: rgb(214, 206, 206);
-  padding-top: 25px;
+  padding-top: 20px;
   @media (max-width: 1024px) {
     padding-top: 1px;
   }

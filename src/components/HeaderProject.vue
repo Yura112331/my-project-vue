@@ -12,27 +12,54 @@ header
         .icon
         .icon1
         .icon2
-      button.share Share
-      button.chat Chat
-  nav.interface
-    - const dataRoute = { Tasks: '/tasks', Kanban: '/Kanban', Activity: '/', Calendar: '/Calendar', Files: '/Files' };
-    each path, name in dataRoute
-      router-link.link(to=`${path}`, active-class="linkActive")= `${name}`
+      ButtonsHeaderProject
+  NavHeaderProject
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import ButtonsHeaderProject from "@/components/ButtonsHeaderProject.vue";
+import NavHeaderProject from "@/components/NavHeaderProject.vue";
 export default defineComponent({
   name: "HeaderProject",
+  components: {
+    ButtonsHeaderProject,
+    NavHeaderProject,
+  },
+  data() {
+    return {
+      routers: [
+        {
+          name: "Tasks",
+          url: "/tasks",
+        },
+        {
+          name: "Kanban",
+          url: "/kanban",
+        },
+        {
+          name: "Activity",
+          url: "/",
+        },
+        {
+          name: "Calendar",
+          url: "/calendar",
+        },
+        {
+          name: "Files",
+          url: "/files",
+        },
+      ]
+    }
+  }
 });
 </script>
 
 <style scoped lang="scss">
 @import "../assets/style/helpers/mixins.scss";
-@import "../assets/style/helpers/variables.scss";
 @import "../assets/style/helpers/reset.scss";
 header {
-  background: $white;
+  background: #ffffff;
   .name {
     @include flex;
     flex-direction: row;
@@ -44,9 +71,9 @@ header {
         position: relative;
         width: 265px;
         height: 43px;
-        font-family: $helv;
+        font-family: Helvetica;
         font-size: 32px;
-        color: $black;
+        color: #131313;
         &::before {
           @include content;
           background-image: url("../assets/Shapes.png");
@@ -147,7 +174,7 @@ header {
         background: #eaeaea;
         width: 67px;
         cursor: pointer;
-        font-family: $helv;
+        font-family: Helvetica;
         font-size: 14px;
         border-radius: 15px;
         height: 30px;
@@ -161,7 +188,7 @@ header {
         background: #fff8dd;
         border-radius: 15px;
         border: none;
-        font-family: $helv;
+        font-family: Helvetica;
         font-size: 14px;
         color: #ffc200;
         padding-left: 30px;
@@ -198,16 +225,16 @@ header {
     max-width: 401px;
     @include flex;
 
-    .link {
+    a {
       text-decoration: none;
       opacity: 0.7;
       font-family: Helvetica;
       font-size: 16px;
-      color: $black;
+      color: #131313;
       padding-bottom: 22px;
     }
 
-    .linkActive {
+    .link {
       border-bottom: 2px solid #ffc200;
     }
 
