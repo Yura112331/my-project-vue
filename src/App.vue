@@ -1,47 +1,14 @@
 <template lang="pug">
-.main-page
-  SideBar(:notification="notification")
-  section.content
-    HeaderProject
-    ContentProject(@changeIndexNotification="notification = $event")
+Layout
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import SideBar from "@/components/SideBar.vue";
-import HeaderProject from "@/components/HeaderProject.vue";
-import ContentProject from "@/components/ContentProject.vue";
+import Layout from "@/components/Layout.vue";
 export default defineComponent({
   name: "main-page",
   components: {
-    SideBar,
-    HeaderProject,
-    ContentProject,
+    Layout,
   },
-
-  data() {
-    return {
-      notification: 3,
-    }
-  }
 });
 </script>
-
-<style lang="scss">
-@import "/assets/style/fonts/fonts.scss";
-@import "/assets/style/helpers/reset.scss";
-.main-page {
-  width: 100%;
-  max-height: 100vh;
-  display: flex;
-  flex-direction: row;
-  margin: 0px;
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-  }
-}
-.content {
-  width: 100%;
-}
-</style>
