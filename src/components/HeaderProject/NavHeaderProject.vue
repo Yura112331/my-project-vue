@@ -25,7 +25,7 @@ export default defineComponent({
         },
         {
           name: "Activity",
-          url: "/",
+          url: "/activity",
         },
         {
           name: "Calendar",

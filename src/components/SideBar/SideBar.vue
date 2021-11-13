@@ -14,13 +14,13 @@ section.general-menu
     nav.navigation
       ul
         li
-          a.menu(href="#") MENU
+          h3 MENU
         li
-          a(href="#") Home
+          h3 Home
         li
-          a(href="#") My Tasks
+          h3(@click="$router.push('/tasks')") My Tasks
         li.text
-          a(href="#") Notifications
+          h3 Notifications
           p {{ notification }}
 </template>
 
@@ -225,12 +225,13 @@ export default defineComponent({
             font-size: 11px;
           }
         }
-        a {
+        h3 {
           font-family: Helvetica;
           font-size: 14px;
           color: #ffffff;
           line-height: 22px;
           text-decoration: none;
+          cursor: pointer;
           @media (max-width: 425px) {
             font-size: 12px;
           }
