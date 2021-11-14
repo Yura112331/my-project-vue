@@ -4,42 +4,63 @@ import Kanban from '../views/Kanban.vue'
 import Activity from '../views/Activity.vue'
 import Calendar from '../views/Calendar.vue'
 import Files from '../views/Files.vue'
-
+import Layout from '../components/Layout.vue'
+import NotFound from '../components/NotFound.vue'
+import Home from '../components/Plug/Home.vue'
+import Notification from '../components/Plug/Notification.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/tasks',
-    name: 'Tasks',
-    component: Tasks,
-  },
-  {
-    path: '/kanban',
-    name: 'Kanban',
-    component: Kanban,
-  },
-  {
-    path: '/activity',
-    name: 'Activity',
-    component: Activity,
-  },
-  {
-    path: '/calendar',
-    name: 'Calendar',
-    component: Calendar,
-  },
-  {
-    path: '/files',
-    name: 'Files',
-    component: Files,
-  },
-  {
     path: '/',
-    redirect: "/tasks",
+    name: 'Layout',
+    component: Layout,
+    children: [
+      {
+      path: '/tasks',
+      name: 'Tasks',
+      component: Tasks,
+    },
+    {
+      path: '/kanban',
+      name: 'Kanban',
+      component: Kanban,
+    },
+    {
+      path: '/activity',
+      name: 'Activity',
+      component: Activity,
+    },
+    {
+      path: '/calendar',
+      name: 'Calendar',
+      component: Calendar,
+    },
+    {
+      path: '/files',
+      name: 'Files',
+      component: Files,
+    },
+    {
+      path: '/home',
+      name: 'Home',
+      component: Home,
+    },
+    {
+      path: '/notification',
+      name: 'Norification',
+      component: Notification,
+    },
+    {
+      path: '/',
+      redirect: "/tasks",
+    },
+    ]
   },
-  /* { 
-    path: '/:pathMatch(.*)*', 
-    component: Activity  
-  }, */
+  
+  {
+    path: "/:pathMatch(.*)*", 
+    component: NotFound,
+  },
 ]
 
 const router = createRouter({
