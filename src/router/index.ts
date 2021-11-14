@@ -4,6 +4,7 @@ import Kanban from '../views/Kanban.vue'
 import Activity from '../views/Activity.vue'
 import Calendar from '../views/Calendar.vue'
 import Files from '../views/Files.vue'
+import NotFound from '../views/NotFound.vue'
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -36,10 +37,10 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     redirect: "/tasks",
   },
-  /* { 
-    path: '/:pathMatch(.*)*', 
-    component: Activity  
-  }, */
+  { 
+    path: '/:NoteFound(.*)*', 
+    component: NotFound,
+  },
 ]
 
 const router = createRouter({
