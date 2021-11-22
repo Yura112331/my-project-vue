@@ -14,13 +14,13 @@ section.general-menu
     nav.navigation
       ul
         li
-          h3 MENU
+          h3.menu MENU
         li
-          h3 Home
+          h3(@click="homeClick") Home
         li
-          h3(@click="$router.push('/tasks')") My Tasks
+          h3(@click="taskClick") My Tasks
         li.text
-          h3 Notifications
+          h3(@click="notificationClick") Notifications
           p {{ notification }}
 </template>
 
@@ -54,6 +54,15 @@ export default defineComponent({
         }
       }
     },
+    homeClick (){
+      this.$router.push('/home')
+    },
+    taskClick (){
+      this.$router.push('/tasks')
+    },
+    notificationClick (){
+      this.$router.push('/notification')
+    }
   },
 });
 </script>

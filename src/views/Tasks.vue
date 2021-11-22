@@ -1,14 +1,7 @@
 <template lang="pug">
 .body-content
   h2 TASKS
-  .block(v-for="(item, i) in tasks", :key="'tasks' + i")
-    h3 {{ i + 1 + '.' + ' ' + item.name }}
-    i(
-      :style="{ backgroundImage: 'url(' + require('../assets/' + item.icon + '.png') + ')' }"
-    )
-    p {{ item.text }}
-    .data {{ item.data }}
-    .alt {{ item.alt }}
+  
 </template>
 
 <script>
@@ -18,45 +11,10 @@ export default defineComponent({
   name: "Tasks",
   data() {
     return {
-      tasks: [
-        {
-          name: "Understand Vue",
-          icon: "check-mark",
-          text: "Make a project using vue js.",
-          data: "24.11.2021",
-          alt: "Done",
-        },
-        {
-          name: "Migration",
-          icon: "check-mark",
-          text: "Transfer data from the old project.",
-          data: "24.11.2021",
-          alt: "Done",
-        },
-        {
-          name: "Array",
-          icon: "check-mark",
-          text: "Move Tasks content into an array.",
-          data: "25.11.2021",
-          alt: "Done",
-        },
-        {
-          name: "GitHub",
-          icon: "check-mark",
-          text: "Сreate repository on GitHub",
-          data: "26.11.2021",
-          alt: "Done",
-        },
-        {
-          name: "Delivery of the assignment",
-          icon: "mark",
-          text: "Unsubscribe for the completed task",
-          data: "26.11.2021",
-          alt: "In process",
-        },
-      ],
+
     };
   },
+  
 });
 </script>
 
@@ -75,7 +33,7 @@ export default defineComponent({
     font-size: 18px;
     margin: 5px 0px 25px;
   }
-  
+
   .block {
     @include flex;
     flex-direction: row;

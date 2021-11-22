@@ -1,5 +1,5 @@
 <template lang="pug">
-Layout
+router-view
 </template>
 
 <script lang="ts">
