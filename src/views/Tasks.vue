@@ -2,7 +2,12 @@
 .body-content
   h2 TASKS
   form(@submit="checkForm")
-    input(v-model="nameTask", type="text", placeholder="Name Tasks", required)
+    input(
+      v-model="nameTask", 
+      type="text", 
+      placeholder="Name Tasks", 
+      required
+      )
     input(
       v-model="titleTask",
       type="text",
@@ -11,7 +16,6 @@
     )
     .button-form
       button Add
-      button(@click="clear(i)") Clear
   ol
     li(v-for="(task, index) in tasks")
       .display
@@ -41,10 +45,6 @@ export default defineComponent({
         this.addTask();
       }
       e.preventDefault();
-    },
-    clear(i: number) {
-      this.nameTask = "";
-      this.titleTask = "";
     },
     addTask() {
       this.tasks.push({
@@ -113,7 +113,7 @@ export default defineComponent({
       justify-content: space-between;
       flex-wrap: wrap;
       width: 150px;
-      
+
       button {
         width: 70px;
         background-color: rgb(221, 184, 115);
