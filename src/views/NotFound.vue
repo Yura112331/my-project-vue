@@ -1,25 +1,27 @@
 <template lang="pug">
-.note-found
-    h2 404
-    h3 Page Not Found
+.not-found
+  h2 404
+  h3 Not Found
+  hr
+  p(@click="$router.push('/')") Back
 </template>
 
 <style lang="scss" scoped>
-.note-found {
-    margin: auto;
-    padding: 20px;
-    text-align: center;
-    background: white;
-    max-width: 300px;
-    max-height: auto;
-
-    h2 {
-        font-size: 80px;
-    }
-
-    h3{
-        font-size: 30px;
-    }
+.not-found {
+  text-align: center;
+  background-color: rgb(235, 227, 227);
+  height: 100vh;
+  h2 {
+    font-size: 200px;
+  }
+  h3 {
+    font-size: 100px;
+  }
+  p {
+    color: rgb(156, 58, 58);
+    font-size: 40px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
 }
 </style>
-

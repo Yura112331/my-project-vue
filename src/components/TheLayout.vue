@@ -12,7 +12,7 @@ import SideBar from "@/components/SideBar/SideBar.vue";
 import HeaderProject from "@/components/HeaderProject/HeaderProject.vue";
 import ContentProject from "@/components/ContentProject/ContentProject.vue";
 export default defineComponent({
-  name: "main-page",
+  name: "TheLayout",
   components: {
     SideBar,
     HeaderProject,

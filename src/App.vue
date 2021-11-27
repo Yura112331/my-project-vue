@@ -4,11 +4,11 @@ router-view
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import Layout from "@/components/Layout.vue";
+import TheLayout from "@/components/TheLayout.vue";
 export default defineComponent({
   name: "main-page",
   components: {
-    Layout,
+    TheLayout,
   },
 });
 </script>
