@@ -26,32 +26,6 @@ export default defineComponent({
     ButtonsHeaderProject,
     NavHeaderProject,
   },
-  data() {
-    return {
-      routers: [
-        {
-          name: "Tasks",
-          url: "/tasks",
-        },
-        {
-          name: "Kanban",
-          url: "/kanban",
-        },
-        {
-          name: "Activity",
-          url: "/",
-        },
-        {
-          name: "Calendar",
-          url: "/calendar",
-        },
-        {
-          name: "Files",
-          url: "/files",
-        },
-      ]
-    }
-  }
 });
 </script>
 
