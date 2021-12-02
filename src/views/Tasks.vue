@@ -2,12 +2,7 @@
 .body-content
   h2 TASKS
   form(@submit="checkForm")
-    input(
-      v-model="nameTask", 
-      type="text", 
-      placeholder="Name Tasks", 
-      required
-      )
+    input(v-model="nameTask", type="text", placeholder="Name Tasks", required)
     input(
       v-model="titleTask",
       type="text",
@@ -15,12 +10,15 @@
       required
     )
     .button-form
-      button Add
+      button(@click="submit") Add
   ol
-    li(v-for="(task, index) in tasks")
+    li(v-for="(task, index) in tasks", v-bind:class="{ enable: enableClass }")
       .display
-        h3 {{ task.id }}. {{ task.name }}
-        p {{ task.title }}
+        h3.name-task {{ task.id }}. {{ task.name }}
+        p.title-task(
+          contenteditable="true"
+          v-on:blur="taskChange(e, task)"
+          ) {{ task.title }}
       button(v-on:click.prevent="removeTask(index)") Remove
 </template>
 
@@ -35,10 +33,19 @@ export default defineComponent({
       tasks: [] as Array<TasksI>,
       nameTask: "",
       titleTask: "",
-      hasError: false,
+      enableClass: false,
     };
   },
-
+  mounted() {
+    this.tasks.forEach((item, i) => {
+      setTimeout(() => {
+        item.enableClass = true;
+        setTimeout(() => {
+          item.enableClass = false;
+        }, i * 3000);
+      }, i * 1000);
+    });
+  },
   methods: {
     checkForm(e: any) {
       if (this.nameTask && this.titleTask) {
@@ -52,9 +59,14 @@ export default defineComponent({
         name: this.nameTask,
         title: this.titleTask,
         isComplete: false,
+        enableClass: false,
       });
       this.nameTask = "";
       this.titleTask = "";
+    },
+    taskChange(e: any, task: any) {
+      task.title = e.target.innerText;
+      e.target.blur();
     },
     removeTask(index: number) {
       this.tasks.splice(index, 1);
@@ -136,6 +148,7 @@ export default defineComponent({
     li {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 10px;
       height: auto;
       background-color: rgb(212, 194, 169);
@@ -176,6 +189,26 @@ export default defineComponent({
       button:hover {
         background-color: black;
         color: white;
+      }
+    }
+    .enable {
+      animation-name: new;
+      animation-timing-function: linear;
+      animation-duration: 1s;
+      animation-iteration-count: 3;
+
+      @keyframes new {
+        50% {
+          opacity: 0;
+        }
+      }
+
+      .name-task {
+        font-size: 35px;
+      }
+      .title-task {
+        font-size: 24px;
+        margin-left: 40px;
       }
     }
   }
