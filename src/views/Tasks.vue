@@ -12,20 +12,16 @@
     .button-form
       button(@click="submit") Add
   ol
-    li(v-for="(task, index) in tasks", v-bind:class="{ enable: enableClass }")
+    li(v-for="(task, index) in tasks" :class="{ 'enable': task.enableClass, 'animtask': task.animationClass }")
       .display
-        h3.name-task {{ task.id }}. {{ task.name }}
-        p.title-task(
-          contenteditable="true"
-          v-on:blur="taskChange(e, task)"
-          ) {{ task.title }}
+       h3 {{ index+1 }}. {{ task.name }} 
+       p {{ task.title }}
       button(v-on:click.prevent="removeTask(index)") Remove
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import TasksI from "../types/InterfacesTasks";
-
 export default defineComponent({
   name: "Tasks",
   data() {
@@ -34,7 +30,19 @@ export default defineComponent({
       nameTask: "",
       titleTask: "",
       enableClass: false,
+      animationClass: true,
     };
+  },
+  created() {
+    this.tasks = [
+      {
+        name: "Lifecycle hooks",
+        title: "Explore lifecycle hooks",
+        isComplete: false,
+        enableClass: false,
+        animationClass: false,
+      },
+    ];
   },
   mounted() {
     this.tasks.forEach((item, i) => {
@@ -42,7 +50,7 @@ export default defineComponent({
         item.enableClass = true;
         setTimeout(() => {
           item.enableClass = false;
-        }, i * 3000);
+        }, 3000);
       }, i * 1000);
     });
   },
@@ -55,18 +63,15 @@ export default defineComponent({
     },
     addTask() {
       this.tasks.push({
-        id: this.tasks.length + 1,
         name: this.nameTask,
         title: this.titleTask,
         isComplete: false,
         enableClass: false,
+        animationClass: true,
       });
+
       this.nameTask = "";
       this.titleTask = "";
-    },
-    taskChange(e: any, task: any) {
-      task.title = e.target.innerText;
-      e.target.blur();
     },
     removeTask(index: number) {
       this.tasks.splice(index, 1);
@@ -78,14 +83,12 @@ export default defineComponent({
 <style scoped lang="scss">
 @import "../assets/style/helpers/mixins.scss";
 @import "../assets/style/components/BodyContent.scss";
-
 .body-content {
   width: 700px;
   height: auto;
   background: #dbf3ef;
   padding: 0px 30px 30px;
   margin-top: 30px;
-
   h2 {
     font-size: 18px;
     margin: 5px 0px 25px;
@@ -96,7 +99,6 @@ export default defineComponent({
     justify-content: space-between;
     width: 350px;
     height: 80px;
-
     input {
       font-family: Helvetica;
       font-size: 16px;
@@ -106,7 +108,6 @@ export default defineComponent({
       padding: 3px 5px;
       margin-bottom: 8px;
     }
-
     input:focus {
       color: #212529;
       background-color: #fff;
@@ -114,18 +115,15 @@ export default defineComponent({
       outline: 0;
       box-shadow: 0 0 0 0.2rem rgba(158, 158, 158, 0.25);
     }
-
     input:valid {
       border: 1px solid black;
       box-shadow: 0 0 0 0.2rem rgba(0, 0, 0, 0.25);
     }
-
     .button-form {
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
       width: 150px;
-
       button {
         width: 70px;
         background-color: rgb(221, 184, 115);
@@ -141,10 +139,10 @@ export default defineComponent({
       }
     }
   }
-
   ol {
     margin-top: 25px;
     width: 100%;
+    max-height: 310px;
     li {
       display: flex;
       justify-content: space-between;
@@ -155,7 +153,6 @@ export default defineComponent({
       border: 1px solid grey;
       border-radius: 10px;
       padding: 10px;
-
       h3 {
         font-family: Helvetica;
         font-size: 23px;
@@ -169,7 +166,7 @@ export default defineComponent({
         font-size: 16px;
         color: #131313;
         line-height: 20px;
-        margin-left: 25px;
+        margin-left: 15px;
       }
 
       button {
@@ -185,13 +182,29 @@ export default defineComponent({
         border-radius: 7px;
         height: 30px;
       }
-
       button:hover {
         background-color: black;
         color: white;
       }
     }
     .enable {
+      .display {
+        animation: font 3s reverse;
+
+        @keyframes font {
+          50% {
+            margin-left: 45px;
+            transform: scale(1.5);
+          }
+          100% {
+            margin-left: 10px;
+            transform: scale(1);
+          }
+        }
+      }
+    }
+
+    .animtask {
       animation-name: new;
       animation-timing-function: linear;
       animation-duration: 1s;
@@ -202,17 +215,8 @@ export default defineComponent({
           opacity: 0;
         }
       }
-
-      .name-task {
-        font-size: 35px;
-      }
-      .title-task {
-        font-size: 24px;
-        margin-left: 40px;
-      }
     }
   }
-
   @media (max-width: 768px) {
     height: auto;
     width: 400px;
