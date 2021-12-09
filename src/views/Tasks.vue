@@ -21,31 +21,21 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import TasksI from "../types/InterfacesTasks";
 export default defineComponent({
   name: "Tasks",
+  props: ["tasks"],
   data() {
     return {
-      tasks: [] as Array<TasksI>,
       nameTask: "",
       titleTask: "",
+      isComplete: false,
       enableClass: false,
       animationClass: true,
     };
   },
-  created() {
-    this.tasks = [
-      {
-        name: "Lifecycle hooks",
-        title: "Explore lifecycle hooks",
-        isComplete: false,
-        enableClass: false,
-        animationClass: false,
-      },
-    ];
-  },
+
   mounted() {
-    this.tasks.forEach((item, i) => {
+    this.tasks.forEach((item: any, i: number) => {
       setTimeout(() => {
         item.enableClass = true;
         setTimeout(() => {
@@ -68,8 +58,8 @@ export default defineComponent({
         isComplete: false,
         enableClass: false,
         animationClass: true,
+        data: "10.12.2021",
       });
-
       this.nameTask = "";
       this.titleTask = "";
     },
@@ -142,7 +132,7 @@ export default defineComponent({
   ol {
     margin-top: 25px;
     width: 100%;
-    max-height: 310px;
+    max-height: 450px;
     li {
       display: flex;
       justify-content: space-between;
@@ -160,7 +150,6 @@ export default defineComponent({
         font-weight: 600;
         margin-bottom: 5px;
       }
-
       p {
         font-family: Helvetica;
         font-size: 16px;
@@ -168,7 +157,6 @@ export default defineComponent({
         line-height: 20px;
         margin-left: 15px;
       }
-
       button {
         background-color: red;
         border: none;
@@ -190,7 +178,6 @@ export default defineComponent({
     .enable {
       .display {
         animation: font 3s reverse;
-
         @keyframes font {
           50% {
             margin-left: 45px;
@@ -203,13 +190,11 @@ export default defineComponent({
         }
       }
     }
-
     .animtask {
       animation-name: new;
       animation-timing-function: linear;
       animation-duration: 1s;
       animation-iteration-count: 3;
-
       @keyframes new {
         50% {
           opacity: 0;
