@@ -2,20 +2,36 @@
 .body-content
   h2 KANBAN
   .kanban
-    h3 TO DO
-      .todo(v-for="(task, index) in tasks") 
-        p {{task.title}}
-        .data Date of completion {{task.data}}
-    h3 In Progress
-      .inprogress(v-for="(task, index) in tasks") 
-    h3 Done
-      .done(v-for="(task, index) in tasks") 
+    .column
+      h3 To Do
+      .task(v-for="(task, index) in tasks")
+        .status(v-if="task.status === status.todo")
+          p {{task.title}}
+          .data Date of completion {{task.data}}
+    .column
+      h3 In Progress
+      .task(v-for="(task, index) in tasks")
+        .status(v-if="task.status === status.inprogress")
+          p {{task.title}}
+          .data Date of completion {{task.data}}
+    .column
+      h3 Done
+      .task(v-for="(task, index) in tasks")
+        .status(v-if="task.status === status.done")
+          p {{task.title}}
+          .data Date of completion {{task.data}}
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { status } from "../enums/EnumStatus";
 export default defineComponent({
   props: ["tasks"],
+  data() {
+    return {
+      status,
+    };
+  },
 });
 </script>
 <style lang="scss" scoped>
@@ -31,15 +47,18 @@ export default defineComponent({
     font-size: 20px;
     color: #131313;
     font-weight: 600;
-    .todo {
+  }
+  .task {
+    
+    margin: 10px;
+    width: auto;
+    .status {
       background-color: rgb(235, 231, 225);
-      margin-top: 10px;
-      padding: 10px;
-      border-radius: 5px;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
       p {
         text-align: start;
-
-        width: 120px;
         height: auto;
         font-size: 13px;
         font-weight: 200;

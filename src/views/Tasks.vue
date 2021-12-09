@@ -21,6 +21,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import {status} from "../enums/EnumStatus";
 export default defineComponent({
   name: "Tasks",
   props: ["tasks"],
@@ -28,20 +29,17 @@ export default defineComponent({
     return {
       nameTask: "",
       titleTask: "",
-      isComplete: false,
       enableClass: false,
       animationClass: true,
     };
   },
 
   mounted() {
-    this.tasks.forEach((item: any, i: number) => {
+    this.tasks.forEach((item: any, index: number) => {
       setTimeout(() => {
         item.enableClass = true;
-        setTimeout(() => {
-          item.enableClass = false;
-        }, 3000);
-      }, i * 1000);
+      }, index * 1000);
+      return item.enableClass = false;
     });
   },
   methods: {
@@ -55,10 +53,10 @@ export default defineComponent({
       this.tasks.push({
         name: this.nameTask,
         title: this.titleTask,
-        isComplete: false,
         enableClass: false,
-        animationClass: true,
+        status: status.todo,
         data: "10.12.2021",
+        
       });
       this.nameTask = "";
       this.titleTask = "";
