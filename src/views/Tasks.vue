@@ -30,7 +30,7 @@ export default defineComponent({
       nameTask: "",
       titleTask: "",
       enableClass: false,
-      animationClass: true,
+      animationClass: false,
     };
   },
 
@@ -38,8 +38,10 @@ export default defineComponent({
     this.tasks.forEach((item: any, index: number) => {
       setTimeout(() => {
         item.enableClass = true;
-      }, index * 1000);
-      return item.enableClass = false;
+        item.animationClass = false;
+      }, index * 500);
+       item.enableClass = false;
+       item.animationClass = false;
     });
   },
   methods: {
@@ -53,13 +55,13 @@ export default defineComponent({
       this.tasks.push({
         name: this.nameTask,
         title: this.titleTask,
-        enableClass: false,
         status: status.todo,
+        animationClass: true,
         data: "10.12.2021",
-        
       });
       this.nameTask = "";
       this.titleTask = "";
+      this.animationClass = false;
     },
     removeTask(index: number) {
       this.tasks.splice(index, 1);
@@ -140,7 +142,7 @@ export default defineComponent({
       background-color: rgb(212, 194, 169);
       border: 1px solid grey;
       border-radius: 10px;
-      padding: 10px;
+      padding: 15px 30px;
       h3 {
         font-family: Helvetica;
         font-size: 23px;
@@ -178,11 +180,9 @@ export default defineComponent({
         animation: font 3s reverse;
         @keyframes font {
           50% {
-            margin-left: 45px;
-            transform: scale(1.5);
+            transform: scale(1.2);
           }
           100% {
-            margin-left: 10px;
             transform: scale(1);
           }
         }
