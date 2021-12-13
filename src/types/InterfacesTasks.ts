@@ -4,4 +4,6 @@ export default interface TasksI {
     isComplete: boolean;
     enableClass: boolean;
     animationClass: boolean;
+    status: string;
+    data: string;
 }

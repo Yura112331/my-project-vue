@@ -21,37 +21,27 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import TasksI from "../types/InterfacesTasks";
+import {status} from "../enums/EnumStatus";
 export default defineComponent({
   name: "Tasks",
+  props: ["tasks"],
   data() {
     return {
-      tasks: [] as Array<TasksI>,
       nameTask: "",
       titleTask: "",
       enableClass: false,
-      animationClass: true,
+      animationClass: false,
     };
   },
-  created() {
-    this.tasks = [
-      {
-        name: "Lifecycle hooks",
-        title: "Explore lifecycle hooks",
-        isComplete: false,
-        enableClass: false,
-        animationClass: false,
-      },
-    ];
-  },
+
   mounted() {
-    this.tasks.forEach((item, i) => {
+    this.tasks.forEach((item: any, index: number) => {
       setTimeout(() => {
         item.enableClass = true;
-        setTimeout(() => {
-          item.enableClass = false;
-        }, 3000);
-      }, i * 1000);
+        item.animationClass = false;
+      }, index * 500);
+       item.enableClass = false;
+       item.animationClass = false;
     });
   },
   methods: {
@@ -65,13 +55,13 @@ export default defineComponent({
       this.tasks.push({
         name: this.nameTask,
         title: this.titleTask,
-        isComplete: false,
-        enableClass: false,
+        status: status.todo,
         animationClass: true,
+        data: "10.12.2021",
       });
-
       this.nameTask = "";
       this.titleTask = "";
+      this.animationClass = false;
     },
     removeTask(index: number) {
       this.tasks.splice(index, 1);
@@ -142,7 +132,7 @@ export default defineComponent({
   ol {
     margin-top: 25px;
     width: 100%;
-    max-height: 310px;
+    max-height: 450px;
     li {
       display: flex;
       justify-content: space-between;
@@ -152,7 +142,7 @@ export default defineComponent({
       background-color: rgb(212, 194, 169);
       border: 1px solid grey;
       border-radius: 10px;
-      padding: 10px;
+      padding: 15px 30px;
       h3 {
         font-family: Helvetica;
         font-size: 23px;
@@ -160,7 +150,6 @@ export default defineComponent({
         font-weight: 600;
         margin-bottom: 5px;
       }
-
       p {
         font-family: Helvetica;
         font-size: 16px;
@@ -168,7 +157,6 @@ export default defineComponent({
         line-height: 20px;
         margin-left: 15px;
       }
-
       button {
         background-color: red;
         border: none;
@@ -190,26 +178,21 @@ export default defineComponent({
     .enable {
       .display {
         animation: font 3s reverse;
-
         @keyframes font {
           50% {
-            margin-left: 45px;
-            transform: scale(1.5);
+            transform: scale(1.2);
           }
           100% {
-            margin-left: 10px;
             transform: scale(1);
           }
         }
       }
     }
-
     .animtask {
       animation-name: new;
       animation-timing-function: linear;
       animation-duration: 1s;
       animation-iteration-count: 3;
-
       @keyframes new {
         50% {
           opacity: 0;
