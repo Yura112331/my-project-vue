@@ -2,36 +2,46 @@
 .body-content
   h2 KANBAN
   .kanban
-    .column
-      h3 To Do
-      .task(v-for="(task, index) in tasks")
-        .status(v-if="task.status === status.todo")
+    .column(v-for="(item, i) in kanban" :key="'status_' + i")
+      h3 {{item.name}}
+      .task(v-for="(task, i) in filteredTask(item.filter)")
+        .status
           p {{task.title}}
           .data Date of completion {{task.data}}
-    .column
-      h3 In Progress
-      .task(v-for="(task, index) in tasks")
-        .status(v-if="task.status === status.inprogress")
-          p {{task.title}}
-          .data Date of completion {{task.data}}
-    .column
-      h3 Done
-      .task(v-for="(task, index) in tasks")
-        .status(v-if="task.status === status.done")
-          p {{task.title}}
-          .data Date of completion {{task.data}}
+    
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import { status } from "../enums/EnumStatus";
+import KanbanI from "../types/InterfacesTasks";
 export default defineComponent({
   props: ["tasks"],
   data() {
     return {
-      status,
+      kanban: [
+        {
+          name: 'To Do',
+          filter: status.todo,
+        },
+        {
+          name: 'In Progress',
+          filter: status.inprogress,
+        },
+        {
+          name: 'Done',
+          filter: status.done,
+        },
+      ],
     };
   },
+  methods: {
+    filteredTask(filteredStatus: status): Array<KanbanI> {
+      return this.tasks.filter((task: any) => {
+        return task.status === filteredStatus
+      })
+    }
+  }
 });
 </script>
 <style lang="scss" scoped>
