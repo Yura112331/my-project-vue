@@ -4,29 +4,32 @@
   .home
     .add-new(v-on:click="showNew()")
       button.add Add new task 
-  TaskModal(v-show="isShow", v-on:removeNew="removeNew()")
+    TaskModal(v-show="isShow", v-on:addClose="addClose()" :tasks="tasks")
   ol
-    li(v-for="(task, index) in tasks" :class="{ 'enable': task.enableClass, 'animtask': task.animationClass }" v-on:click="showChange(task)")
+    li(v-for="(task, index) in tasks" :class="{ 'enable': task.enableClass, 'animtask': task.animationClass }" v-on:click="showChange(tasks)")
       .display
-       h3 {{ index+1 }}. {{ task.name }} 
-       p {{ task.title }}
+        .header
+          h3 {{ index+1 }}. {{ task.name }} 
+          .data Date of completion {{ task.data }}
+        p {{ task.title }}
+      button.details(v-on:click="showDetails()") Details
+      TaskDetailsModal(v-show="isShowChange", v-on:closeDetails="closeDetails()")
       button(v-on:click.prevent="removeTask(index)") Remove
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import TaskModal from "@/modals/TaskModals.vue";
+import TaskModal from "../modals/TaskModals.vue";
+import TaskDetailsModal from "../modals/TaskDetailsModal.vue";
 export default defineComponent({
   name: "Tasks",
   props: ["tasks"],
 
   data() {
     return {
+      newTasks: {},
       isShow: false,
-      nameTask: "",
-      titleTask: "",
-      enableClass: false,
-      animationClass: false,
+      isShowChange: false,
     };
   },
   mounted() {
@@ -39,13 +42,25 @@ export default defineComponent({
       item.animationClass = false;
     });
   },
-  components: { TaskModal },
+  components: { 
+    TaskModal,
+    TaskDetailsModal,
+   },
   methods: {
     showNew() {
       this.isShow = true;
     },
-    removeNew() {
+    addClose() {
       this.isShow = false;
+    },
+    showChange(tasks:any) {
+      this.newTasks = tasks;
+    },
+    showDetails() {
+      this.isShowChange = true;
+    },
+    closeDetails() {
+      this.isShowChange = false;
     },
     removeTask(index: number) {
       this.tasks.splice(index, 1);
@@ -67,14 +82,18 @@ export default defineComponent({
     font-size: 18px;
     margin: 5px 0px 25px;
   }
-  .add {
-    background-color: rgb(221, 184, 115);
-    border: none;
-    border-radius: 5px;
-    color: black;
-    transition-duration: 0.4s;
-    cursor: pointer;
+  .add-new {
+    width: 100px;
+    .add {
+      background-color: rgb(221, 184, 115);
+      border: none;
+      border-radius: 5px;
+      color: black;
+      transition-duration: 0.4s;
+      cursor: pointer;
+    }
   }
+
   button:hover {
     background-color: black;
     color: white;
@@ -94,20 +113,7 @@ ol {
     border: 1px solid grey;
     border-radius: 10px;
     padding: 15px 30px;
-    h3 {
-      font-family: Helvetica;
-      font-size: 23px;
-      color: #131313;
-      font-weight: 600;
-      margin-bottom: 5px;
-    }
-    p {
-      font-family: Helvetica;
-      font-size: 16px;
-      color: #131313;
-      line-height: 20px;
-      margin-left: 15px;
-    }
+
     button {
       background-color: red;
       border: none;
@@ -115,7 +121,7 @@ ol {
       text-align: center;
       text-decoration: none;
       font-size: 16px;
-      margin: 4px 2px;
+      margin: 4px 6px;
       transition-duration: 0.4s;
       cursor: pointer;
       border-radius: 7px;
@@ -125,10 +131,38 @@ ol {
       background-color: black;
       color: white;
     }
+
+    h3 {
+      font-family: Helvetica;
+      font-size: 23px;
+      color: #131313;
+      font-weight: 600;
+      margin-bottom: 5px;
+      width: 100%;
+    }
+    p {
+      font-family: Helvetica;
+      font-size: 16px;
+      color: #131313;
+      line-height: 20px;
+      margin-left: 15px;
+    }
+    .header {
+      display: flex;
+
+      .data {
+        font-family: Helvetica;
+        font-size: 14px;
+        width: 80px;
+        color: #131313;
+      }
+    }
   }
   .enable {
     .display {
       animation: font 3s reverse;
+      width: 100%;
+      margin-right: 20px;
       @keyframes font {
         50% {
           transform: scale(1.2);

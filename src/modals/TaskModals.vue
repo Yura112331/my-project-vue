@@ -1,5 +1,5 @@
 <template lang="pug">
-.modal-backdrop(@click.self="close()")
+.modal-add(@click.self="$emit('addClose')")
     .modal
         h2 New Tasks
         form(@submit="checkForm")
@@ -10,26 +10,35 @@
             placeholder="Description Tasks",
             required
             )
+            input(
+            v-model="dataTask",
+            type="date",
+            min="2021-12-21",
+            max="2022-12-31",
+            required
+            )
         .button-form
             button(v-on:click="addTask()") Add
-            button(v-on:click="$emit('removeNew')") Close
+            button(v-on:click="$emit('addClose')") Close
 </template>
 <script>
 import { defineComponent } from "vue";
 import { status } from "../enums/EnumStatus";
 export default defineComponent({
   name: "TaskModal",
+  props: ['tasks'],
   data() {
     return {
       nameTask: "",
       titleTask: "",
+      dataTask: "",
       enableClass: false,
       animationClass: false,
     };
   },
   methods: {
     checkForm(e) {
-      if (this.nameTask && this.titleTask) {
+      if (this.nameTask && this.titleTask && this.dataTask) {
         this.addTask();
       }
       e.preventDefault();
@@ -38,20 +47,21 @@ export default defineComponent({
       this.tasks.push({
         name: this.nameTask,
         title: this.titleTask,
+        data: this.dataTask,
         status: status.todo,
         animationClass: true,
-        data: "10.12.2021",
       });
       this.nameTask = "";
       this.titleTask = "";
+      this.dataTask = "";
       this.animationClass = false;
-      this.$emit("removeNew");
+      this.$emit("addClose");
     },
   },
 });
 </script>
 <style lang="scss">
-.modal-backdrop {
+.modal-add {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -86,7 +96,7 @@ export default defineComponent({
       flex-direction: column;
       justify-content: space-between;
       width: 350px;
-      height: 80px;
+      height: 110px;
       input {
         font-family: Helvetica;
         font-size: 16px;
