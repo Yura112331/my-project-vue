@@ -1,51 +1,40 @@
 <template lang="pug">
-.modal-details(@click.self="$emit('closeDetails')")
+.modal-details(@click.self="$emit('closeDetails')" v-if="isOpen")
     .modal
         h2 Details Tasks
         .form
-          .name(v-if="show") Name: {{name}}
+          .name(v-if="show") Name: {{taskDetails.name}}
           .text(v-if="!show" @change="handleChange") Name: 
             textarea(v-model='editTask.name')
         .form
-          .status(v-if="show") Status: {{status}}
-          .text(v-if="!show" @change="handleChange" ) Status: 
-            textarea(v-model='editTask.name')  
+          .status(v-if="show") Status: {{taskDetails.status}}
         .form
-          .data(v-if="show" ) Deadline: {{data}}
+          .data(v-if="show" ) Deadline: {{taskDetails.dataEnd}}
           .text(v-if="!show" @change="handleChange") Deadline: 
-            input(v-model='editTask.data'  type="date" min="2021-12-21", max="2022-12-31" required)
+            input(v-model='editTask.dataEnd'  type="date" min="2021-12-21", max="2022-12-31" required)
         .form
-          .title(v-if="show" @change="handleChange") Description: {{title}}
+          .title(v-if="show" @change="handleChange") Description: {{taskDetails.title}}
           .text(v-if="!show" @change="handleChange") Description: 
             textarea(v-model='editTask.title')
 
         .button-form
-          button.add-task(v-on:click="show=!show" v-if="show") Edit
+          button.add-task(v-if="show" v-on:click="$emit('closeDetails')") Cancle
+          button.add-task(v-on:click="editShow()" v-if="show") Edit
           button.add-task(v-if="!show" @click="cancleForm()") Cancle
-          button.add-task(v-show="!show" @click="") Save
+          button.add-task(v-show="!show" @click="saveTask()") Save
 </template>
 <script>
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "TaskDetailsModal",
-  props: {
-    name: String,
-    status: String,
-    data: String,
-    title: String,
-    isShow: {
-      type: Boolean,
-      required: true,
-    },
-  },
+  props: ["taskDetails", "isOpen"],
   data() {
     return {
       show: true,
       editTask: {
         name: "",
         title: "",
-        data: "",
-        status: "",
+        dataEnd: "",
       },
     };
   },
@@ -53,6 +42,17 @@ export default defineComponent({
     cancleForm() {
       this.show = true;
     },
+    saveTask() {
+      this.show = true;
+      this.$emit('saveTask', this.editTask);
+      this.$emit('closeDetails');
+    },
+    editShow() {
+      this.show=!this.show 
+      this.editTask.title = this.taskDetails.title
+      this.editTask.dataEnd = this.taskDetails.dataEnd
+      this.editTask.name = this.taskDetails.name
+    }
   },
 });
 </script>
@@ -94,7 +94,6 @@ export default defineComponent({
       height: 100%;
       background-color: rgb(124, 164, 209);
       margin-bottom: 10px;
-      padding: 5px;
       border-radius: 5px;
 
       .name,
@@ -108,6 +107,10 @@ export default defineComponent({
         font-size: 16px;
         color: #131313;
         height: 100%;
+        background-color: rgb(124, 164, 209);
+        padding: 5px;
+        border-radius: 5px;
+
       }
       .name {
         font-weight: 600;
@@ -135,6 +138,15 @@ export default defineComponent({
           margin-left: 10px;
         }
       }
+    }
+    .form-edit {
+       display: flex;
+      justify-content: space-between;
+      width: 400px;
+      height: 100%;
+      background-color: rgb(124, 164, 209);
+      margin-bottom: 10px;
+      border-radius: 5px;
     }
 
     .button-form {

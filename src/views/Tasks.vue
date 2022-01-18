@@ -6,34 +6,41 @@
       button.add Add new task 
     TaskModal(v-show="isShow", v-on:addClose="addClose()" :tasks="tasks")
   ol
-    li(v-for="(task, index) in tasks" :class="{ 'enable': task.enableClass, 'animtask': task.animationClass }" v-on:click="showChange(tasks)")
+    li(v-for="(task, index) in tasks" :key="'tasks_'+i" :class="{ 'enable': task.enableClass, 'animtask': task.animationClass }" v-on:click="showChange(task)")
       .display
         .header
           h3 {{ index+1 }}. {{ task.name }} 
-          .data Date of completion {{ task.data }}
+          .data Date of creation {{ task.dataCreate }}
+          .data Date of completion {{ task.dataEnd }}
         p {{ task.title }}
-      button.details(v-on:click="showDetails()") Details
-      TaskDetailsModal(v-show="isShowChange", v-on:closeDetails="closeDetails()")
+      button.details(v-on:click="taskDetails(task)") Details
       button(v-on:click.prevent="removeTask(index)") Remove
+  TaskDetailsModal( 
+    v-on:closeDetails="closeDetails()",
+    :isOpen="isOpen"
+    :taskDetails="taskDescription"
+    @saveTask="saveTask($event)"
+  )
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import TaskModal from "../modals/TaskModals.vue";
+import TasksI from "@/types/InterfacesTasks";
 import TaskDetailsModal from "../modals/TaskDetailsModal.vue";
 export default defineComponent({
+  props: ['tasks'],
   name: "Tasks",
-  props: ["tasks"],
-
   data() {
     return {
-      newTasks: {},
+      newTasks: {} as Array<TasksI>,
       isShow: false,
-      isShowChange: false,
+      isOpen: false,
+      taskDescription: {} as TasksI,
     };
   },
   mounted() {
-    this.tasks.forEach((item: any, index: number) => {
+    this.tasks.forEach((item: TasksI, index: number) => {
       setTimeout(() => {
         item.enableClass = true;
         item.animationClass = false;
@@ -46,6 +53,9 @@ export default defineComponent({
     TaskModal,
     TaskDetailsModal,
    },
+  beforeUnmount() {
+    this.$emit('tasksGlobal', this.tasks);
+  },
   methods: {
     showNew() {
       this.isShow = true;
@@ -53,14 +63,24 @@ export default defineComponent({
     addClose() {
       this.isShow = false;
     },
-    showChange(tasks:any) {
-      this.newTasks = tasks;
+    showChange() {
+      this.newTasks = this.tasks;
     },
-    showDetails() {
-      this.isShowChange = true;
+    taskDetails(task: TasksI) {
+      this.taskDescription = task;
+      this.isOpen = true;
     },
     closeDetails() {
-      this.isShowChange = false;
+      this.isOpen = false;
+    },
+    saveTask(item: TasksI) {
+       this.tasks.forEach((task: TasksI) => {
+         if (task.id === this.taskDescription.id) {
+          task.title = item.title
+          task.dataEnd = item.dataEnd
+          task.name = item.name
+         }
+       });
     },
     removeTask(index: number) {
       this.tasks.splice(index, 1);
@@ -153,7 +173,7 @@ ol {
       .data {
         font-family: Helvetica;
         font-size: 14px;
-        width: 80px;
+        width: 125px;
         color: #131313;
       }
     }
@@ -162,7 +182,6 @@ ol {
     .display {
       animation: font 3s reverse;
       width: 100%;
-      margin-right: 20px;
       @keyframes font {
         50% {
           transform: scale(1.2);
@@ -182,6 +201,10 @@ ol {
       50% {
         opacity: 0;
       }
+    }
+    .display {
+      width: 100%;
+      margin-right: 20px;
     }
   }
   @media (max-width: 768px) {

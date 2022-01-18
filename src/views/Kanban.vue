@@ -15,16 +15,8 @@
       div(v-for="(item, i) in toDoList" :key="'col1'+i" draggable="true" @dragstart="onDrag($event, item.listIndex)")
         .status
           p {{ item.name }}
-          .data Date of completion {{ item.data }}
-          button.details(v-on:click="taskDetails()") Details
-          TaskDetailsModal(
-              v-show="isShowChange",
-              v-on:closeDetails="closeDetails()",
-              :name="item.name"
-              :status="item.status"
-              :title="item.title"
-              :data="item.data"
-            )
+          .data Date of completion {{ item.dataEnd }}
+          button.details(v-on:click="taskDetails(item)") Details
     .task-item(
       :class="{dropped: checkItems(inProgressList)}"
       @dragenter.prevent
@@ -34,45 +26,35 @@
         div(v-for="(item, i) in inProgressList" :key="'col2'+i" draggable="true" @dragstart="onDrag($event, item.listIndex)")
           .status
             p {{ item.name }}
-            .data Date of completion {{ item.data }}
-            button.details(v-on:click="taskDetails()") Details
-            TaskDetailsModal(
-                v-show="isShowChange",
-                v-on:closeDetails="closeDetails()",
-                :name="item.name"
-                :status="item.status"
-                :title="item.title"
-                :data="item.data"
-              )
+            .data Date of completion {{ item.dataEnd }}
+            button.details(v-on:click="taskDetails(item)") Details
     .task-item(
       :class="{dropped: checkItems(doneList)}"
       @dragenter.prevent
       @dragover.prevent
       @drop="onDropDone($event)")
         p.dropCaption(v-if="checkItems(doneList)") Drop here...
-        div(v-for="(item, i) in doneList" :key="'col3'+i" draggable="true" @dragstart="onDrag($event, item.listIndex)")
+        div(v-for="(item, i) in doneList" :key="'col3'+i")
           .status
             p {{ item.name }}
-            .data Date of completion {{ item.data }}
-            button.details(v-on:click="taskDetails()") Details
-            TaskDetailsModal(
-                v-show="isShowChange",
-                v-on:closeDetails="closeDetails()",
-                :name="item.name"
-                :status="item.status"
-                :title="item.title"
-                :data="item.data"
-              )
+            .data Date of completion {{ item.dataEnd }}
+            button.details(v-on:click="taskDetails(item)") Details
+  TaskDetailsModal(
+    v-on:closeDetails="closeDetails()",
+    :isOpen="isOpen"
+    :taskDetails="taskDescription"
+    @saveTask="saveTask($event)"
+    )
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import { status } from "../enums/EnumStatus";
-
+import TaskModal from "../modals/TaskModals.vue";
 import TaskDetailsModal from "../modals/TaskDetailsModal.vue";
 import TasksI from "@/types/InterfacesTasks";
 export default defineComponent({
-  props: ["tasks"],
+  props: ['tasks'],
   data() {
     return {
       kanban: [
@@ -92,14 +74,19 @@ export default defineComponent({
       toDoList: [] as Array<TasksI>,
       inProgressList: [] as Array<TasksI>,
       doneList: [] as Array<TasksI>,
-      isShowChange: false,
+      isOpen: false,
+      taskDescription: {} as TasksI,
     };
   },
   components: {
+    TaskModal,
     TaskDetailsModal,
   },
   mounted() {
     this.createListsData();
+  },
+   beforeUnmount() {
+    this.$emit('tasksGlobal', this.tasks);
   },
   methods: {
     taskLength(status: status) {
@@ -141,11 +128,21 @@ export default defineComponent({
       this.inProgressList = this.getFilteredArray(status.inprogress);
       this.doneList = this.getFilteredArray(status.done);
     },
-    taskDetails() {
-      this.isShowChange = true;
+    taskDetails(item: TasksI) {
+      this.taskDescription = item;
+      this.isOpen = true;
     },
     closeDetails() {
-      this.isShowChange = false;
+      this.isOpen = false;
+    },
+    saveTask(item: TasksI) {
+       this.tasks.forEach((task: TasksI) => {
+         if (task.id === this.taskDescription.id) {
+          task.title = item.title
+          task.dataEnd = item.dataEnd
+          task.name = item.name
+         }
+       });
     },
     getFilteredArray(status: status) {
       return this.tasks.filter((element: any, key: number) => {
@@ -160,6 +157,7 @@ export default defineComponent({
 @import "../assets/style/components/BodyContent.scss";
 
 .body-content {
+  padding: 0px 10px;
   h2 {
     text-align: center;
     font-family: Helvetica;

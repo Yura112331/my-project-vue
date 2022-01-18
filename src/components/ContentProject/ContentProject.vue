@@ -1,6 +1,6 @@
 <template lang="pug">
 section.body
-  router-view(:tasks="tasks" @changeIndex="conectEvent")
+  router-view(:tasks="tasks" @changeIndex="conectEvent" @tasksGlobal="tasks = $event")
 </template>
 
 <script lang="ts">
@@ -18,7 +18,9 @@ export default defineComponent({
         enableClass: false,
         animationClass: false,
         status: status.done,
-        data: "02.12.2021",
+        dataEnd: "2021-12-02",
+        dataCreate: "2021-12-01",
+        id: 1,
       },
       {
         name: "Lesson 9",
@@ -26,7 +28,9 @@ export default defineComponent({
         enableClass: false,
         animationClass: false,
         status: status.inprogress,
-        data: "10.12.2021",
+        dataEnd: "2021-12-10",
+        dataCreate: "2021-12-01",
+        id: 2,
       },
       {
         name: "Lesson 9",
@@ -34,7 +38,9 @@ export default defineComponent({
         enableClass: false,
         animationClass: false,
         status: status.todo,
-        data: "10.12.2021",
+        dataEnd: "2021-12-10",
+        dataCreate: "2021-12-01",
+        id: 3,
       },
       ] as Array<TasksI>,
     }

@@ -2,7 +2,7 @@
 .modal-add(@click.self="$emit('addClose')")
     .modal
         h2 New Tasks
-        form(@submit="checkForm")
+        form(@submit="addTask")
             input(v-model="nameTask", type="text", placeholder="Name Tasks", required)
             input(
             v-model="titleTask",
@@ -18,8 +18,8 @@
             required
             )
         .button-form
-            button(v-on:click="addTask()") Add
-            button(v-on:click="$emit('addClose')") Close
+          button(v-on:click="addTask") Add
+          button(v-on:click="$emit('addClose')") Close
 </template>
 <script>
 import { defineComponent } from "vue";
@@ -37,25 +37,23 @@ export default defineComponent({
     };
   },
   methods: {
-    checkForm(e) {
-      if (this.nameTask && this.titleTask && this.dataTask) {
-        this.addTask();
-      }
+    addTask(e) {
       e.preventDefault();
-    },
-    addTask() {
-      this.tasks.push({
+      if (this.nameTask && this.titleTask && this.dataTask) {
+        this.tasks.push({
         name: this.nameTask,
         title: this.titleTask,
-        data: this.dataTask,
+        dataEnd: this.dataTask,
+        dataCreate: this.dataTask,
         status: status.todo,
         animationClass: true,
-      });
+        id: this.id = this.tasks.length,
+        });
+      }
       this.nameTask = "";
       this.titleTask = "";
       this.dataTask = "";
       this.animationClass = false;
-      this.$emit("addClose");
     },
   },
 });
