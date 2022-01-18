@@ -44,7 +44,7 @@ export default defineComponent({
         name: this.nameTask,
         title: this.titleTask,
         dataEnd: this.dataTask,
-        dataCreate: this.dataTask,
+        dataCreate: "2021-12-01",
         status: status.todo,
         animationClass: true,
         id: this.id = this.tasks.length,
