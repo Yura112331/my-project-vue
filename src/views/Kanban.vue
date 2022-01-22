@@ -1,6 +1,7 @@
 <template lang="pug">
 .body-content
   h2 KANBAN
+    input(type='search' v-model='search' placeholder='Search name..')
   .task-header
     .head-item(v-for="(column, i) in kanban" :key="'column_'+i")
       p.headCaption {{column.name}}
@@ -76,6 +77,9 @@ export default defineComponent({
       doneList: [] as Array<TasksI>,
       isOpen: false,
       taskDescription: {} as TasksI,
+      search: "",
+      timeafter: "",
+      timebefore: "",
     };
   },
   components: {
@@ -150,6 +154,7 @@ export default defineComponent({
         return element.status === status;
       });
     },
+    
   },
 });
 </script>
