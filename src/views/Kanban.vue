@@ -1,12 +1,12 @@
 <template lang="pug">
 .body-content
   h2 KANBAN
-    input(type='search' v-model='search' placeholder='Search name..')
+  input(type='text' v-model='search' placeholder='Search name..' @keyup="sortArray")
   .task-header
     .head-item(v-for="(column, i) in kanban" :key="'column_'+i")
       p.headCaption {{column.name}}
       span.headCaptionCount Cards count: {{taskLength(column.filter)}}
-  .task-body
+  .task-body(v-for="(item, i) in filteredTasks" :key="'filteredTasks'+i")
     .task-item(
       :class="{dropped: checkItems(toDoList)}"
       @dragenter.prevent
@@ -92,6 +92,16 @@ export default defineComponent({
    beforeUnmount() {
     this.$emit('tasksGlobal', this.tasks);
   },
+  computed: {
+    filteredTasks(): any {
+      if (this.search) {
+        return this.tasks.filter((item: any) => {
+          return item.name.includes(this.search)
+        })
+      }
+      return this.tasks
+    }
+  },
   methods: {
     taskLength(status: status) {
       return this.getFilteredArray(status).length;
@@ -147,7 +157,8 @@ export default defineComponent({
           task.name = item.name
          }
        });
-    },
+    }, 
+    
     getFilteredArray(status: status) {
       return this.tasks.filter((element: any, key: number) => {
         element.listIndex = key;
