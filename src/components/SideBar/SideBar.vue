@@ -1,5 +1,5 @@
 <template lang="pug">
-section.general-menu
+section.general-menu(v-if="sideBarshow")
   .projectus
     h1 PROJECTUS
   section.body
@@ -36,6 +36,10 @@ export default defineComponent({
     notification: {
       type: Number,
       default: 3,
+    },
+    sideBarshow: {
+      type: Boolean,
+      require: true,
     },
   },
 

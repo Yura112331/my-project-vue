@@ -212,12 +212,7 @@ header {
       border-bottom: 2px solid #ffc200;
     }
 
-    @media (max-width: 768px) {
-      display: flex;
-      flex-direction: column;
-      margin: 20px auto;
-      width: 100%;
-    }
+    
   }
   @media (max-width: 768px) {
     height: 100%;

@@ -10,7 +10,6 @@
       .display
         .header
           h3 {{ index+1 }}. {{ task.name }} 
-          .data Date of creation {{ task.dataCreate }}
           .data Date of completion {{ task.dataEnd }}
         p {{ task.title }}
       button.details(v-on:click="taskDetails(task)") Details

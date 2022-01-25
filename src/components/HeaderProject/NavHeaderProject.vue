@@ -65,9 +65,13 @@ export default defineComponent({
 
   @media (max-width: 768px) {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     margin: 20px auto;
-    width: 100%;
+  }
+  @media (max-width: 425px) {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0px;
   }
 }
 </style>

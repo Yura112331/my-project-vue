@@ -6,7 +6,7 @@
     .head-item(v-for="(column, i) in kanban" :key="'column_'+i")
       p.headCaption {{column.name}}
       span.headCaptionCount Cards count: {{taskLength(column.filter)}}
-  .task-body(v-for="(item, i) in filteredTasks" :key="'filteredTasks'+i")
+  .task-body
     .task-item(
       :class="{dropped: checkItems(toDoList)}"
       @dragenter.prevent
@@ -14,7 +14,7 @@
       @drop="onDropToDo($event)")
       p.dropCaption(v-if="checkItems(toDoList)") Drop here...
       div(v-for="(item, i) in toDoList" :key="'col1'+i" draggable="true" @dragstart="onDrag($event, item.listIndex)")
-        .status
+        .status(:class="taskClass")
           p {{ item.name }}
           .data Date of completion {{ item.dataEnd }}
           button.details(v-on:click="taskDetails(item)") Details
@@ -25,7 +25,7 @@
       @drop="onDropInprogress($event)")
         p.dropCaption(v-if="checkItems(inProgressList)") Drop here...
         div(v-for="(item, i) in inProgressList" :key="'col2'+i" draggable="true" @dragstart="onDrag($event, item.listIndex)")
-          .status
+          .status(:class="taskClass")
             p {{ item.name }}
             .data Date of completion {{ item.dataEnd }}
             button.details(v-on:click="taskDetails(item)") Details
@@ -36,7 +36,7 @@
       @drop="onDropDone($event)")
         p.dropCaption(v-if="checkItems(doneList)") Drop here...
         div(v-for="(item, i) in doneList" :key="'col3'+i")
-          .status
+          .status(:class="taskClass")
             p {{ item.name }}
             .data Date of completion {{ item.dataEnd }}
             button.details(v-on:click="taskDetails(item)") Details
@@ -55,7 +55,7 @@ import TaskModal from "../modals/TaskModals.vue";
 import TaskDetailsModal from "../modals/TaskDetailsModal.vue";
 import TasksI from "@/types/InterfacesTasks";
 export default defineComponent({
-  props: ['tasks'],
+  props: ["tasks"],
   data() {
     return {
       kanban: [
@@ -80,6 +80,9 @@ export default defineComponent({
       search: "",
       timeafter: "",
       timebefore: "",
+      todo: true,
+      inprogress: true,
+      done: true,
     };
   },
   components: {
@@ -89,18 +92,28 @@ export default defineComponent({
   mounted() {
     this.createListsData();
   },
-   beforeUnmount() {
-    this.$emit('tasksGlobal', this.tasks);
+  beforeUnmount() {
+    this.$emit("tasksGlobal", this.tasks);
   },
   computed: {
-    filteredTasks(): any {
+    /* filteredTasks(): any {
       if (this.search) {
         return this.tasks.filter((item: any) => {
           return item.name.includes(this.search)
         })
       }
       return this.tasks
-    }
+    } */
+    taskClass() {
+      return {
+        failed:
+          new Date() > new Date(this.tasks.dataEnd) &&
+          this.tasks.status != status.done,
+        grey: this.tasks.status === status.todo,
+        orange: this.tasks.status === status.inprogress,
+        blue: this.tasks.status === status.done,
+      };
+    },
   },
   methods: {
     taskLength(status: status) {
@@ -150,22 +163,21 @@ export default defineComponent({
       this.isOpen = false;
     },
     saveTask(item: TasksI) {
-       this.tasks.forEach((task: TasksI) => {
-         if (task.id === this.taskDescription.id) {
-          task.title = item.title
-          task.dataEnd = item.dataEnd
-          task.name = item.name
-         }
-       });
-    }, 
-    
+      this.tasks.forEach((task: TasksI) => {
+        if (task.id === this.taskDescription.id) {
+          task.title = item.title;
+          task.dataEnd = item.dataEnd;
+          task.name = item.name;
+        }
+      });
+    },
+
     getFilteredArray(status: status) {
       return this.tasks.filter((element: any, key: number) => {
         element.listIndex = key;
         return element.status === status;
       });
     },
-    
   },
 });
 </script>
@@ -180,6 +192,10 @@ export default defineComponent({
     font-size: 20px;
     color: #131313;
     font-weight: 600;
+
+    @media (max-width: 426px) {
+      width: 100%;
+    }
   }
 
   .task-header,
@@ -203,8 +219,16 @@ export default defineComponent({
         color: #131313;
         background: burlywood;
         padding: 5px 10px;
+
+        @media (max-width: 426px) {
+          font-size: 10px;
+        }
       }
     }
+  }
+  @media (max-width: 426px) {
+    padding: 0px;
+    width: 350px;
   }
 }
 
@@ -227,7 +251,6 @@ export default defineComponent({
 
     div {
       .status {
-        background-color: rgb(235, 231, 225);
         margin-top: 10px;
         padding: 10px;
         border-radius: 5px;
@@ -262,6 +285,9 @@ export default defineComponent({
           background-color: black;
           color: white;
         }
+      }
+      .grey {
+        background: black;
       }
     }
   }

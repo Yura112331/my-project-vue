@@ -1,6 +1,8 @@
 <template lang="pug">
 .main-page
-  SideBar(:notification="notification")
+  SideBar(:sideBarshow="sideBarshow" :notification="notification")
+  img.swipeClose(v-if="swipeShowTrue" src="@/assets/swipeClose.png" alt="swipeTrue" v-on:click="sideBarClose()")
+  img.swipeOpen(v-if="swipeShowFalse" src="@/assets/swipeOpen.png" alt="swipeFalse" v-on:click="sideBarOpen()")
   section.content
     HeaderProject
     ContentProject(@changeIndexNotification="notification = $event")
@@ -22,7 +24,22 @@ export default defineComponent({
   data() {
     return {
       notification: 3,
-    }
+      sideBarshow: true,
+      swipeShowTrue: true,
+      swipeShowFalse: false,
+    };
+  },
+  methods: {
+    sideBarClose() {
+      this.sideBarshow = false;
+      this.swipeShowTrue = false;
+      this.swipeShowFalse = true;
+    },
+    sideBarOpen() {
+      this.sideBarshow = true;
+      this.swipeShowTrue = true;
+      this.swipeShowFalse = false;
+    },
   }
 });
 </script>
@@ -40,8 +57,30 @@ export default defineComponent({
   @media (max-width: 1024px) {
     flex-direction: column;
   }
-}
-.content {
-  width: 100%;
+  .swipeClose {
+    display: none;
+    background: white;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 15px;
+    top: 290px;
+    opacity: 0.8;
+
+    @media (max-width: 426px) {
+      display: block;
+    }
+  }
+  .swipeOpen {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    opacity: 0.8;
+  }
+  .content {
+    width: 100%;
+  }
 }
 </style>
