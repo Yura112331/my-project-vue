@@ -1,7 +1,9 @@
 <template lang="pug">
 .body-content
   h2 KANBAN
-  input(type='text' v-model='search' placeholder='Search name..' @keyup="sortArray")
+  input(type="text" v-model='search' placeholder='Search name..')
+  input(type="date" v-model='dataSearchFrom' min="2021-11-21" max="2022-12-31")
+  input(type="date" v-model='dataSearchTo' min="2021-11-21" max="2022-12-31")
   .task-header
     .head-item(v-for="(column, i) in kanban" :key="'column_'+i")
       p.headCaption {{column.name}}
@@ -14,7 +16,7 @@
       @drop="onDropToDo($event)")
       p.dropCaption(v-if="checkItems(toDoList)") Drop here...
       div(v-for="(item, i) in toDoList" :key="'col1'+i" draggable="true" @dragstart="onDrag($event, item.listIndex)")
-        .status(:class="taskClass")
+        .status(:class="taskClass(item)")
           p {{ item.name }}
           .data Date of completion {{ item.dataEnd }}
           button.details(v-on:click="taskDetails(item)") Details
@@ -25,7 +27,7 @@
       @drop="onDropInprogress($event)")
         p.dropCaption(v-if="checkItems(inProgressList)") Drop here...
         div(v-for="(item, i) in inProgressList" :key="'col2'+i" draggable="true" @dragstart="onDrag($event, item.listIndex)")
-          .status(:class="taskClass")
+          .status(:class="taskClass(item)")
             p {{ item.name }}
             .data Date of completion {{ item.dataEnd }}
             button.details(v-on:click="taskDetails(item)") Details
@@ -36,7 +38,7 @@
       @drop="onDropDone($event)")
         p.dropCaption(v-if="checkItems(doneList)") Drop here...
         div(v-for="(item, i) in doneList" :key="'col3'+i")
-          .status(:class="taskClass")
+          .status(:class="taskClass(item)")
             p {{ item.name }}
             .data Date of completion {{ item.dataEnd }}
             button.details(v-on:click="taskDetails(item)") Details
@@ -78,11 +80,8 @@ export default defineComponent({
       isOpen: false,
       taskDescription: {} as TasksI,
       search: "",
-      timeafter: "",
-      timebefore: "",
-      todo: true,
-      inprogress: true,
-      done: true,
+      dataSearchTo: "",
+      dataSearchFrom: "",
     };
   },
   components: {
@@ -95,27 +94,17 @@ export default defineComponent({
   beforeUnmount() {
     this.$emit("tasksGlobal", this.tasks);
   },
-  computed: {
-    /* filteredTasks(): any {
-      if (this.search) {
-        return this.tasks.filter((item: any) => {
-          return item.name.includes(this.search)
-        })
-      }
-      return this.tasks
-    } */
-    taskClass() {
+  
+  methods: {
+    taskClass(item: TasksI) {
       return {
         failed:
-          new Date() > new Date(this.tasks.dataEnd) &&
-          this.tasks.status != status.done,
-        grey: this.tasks.status === status.todo,
-        orange: this.tasks.status === status.inprogress,
-        blue: this.tasks.status === status.done,
+          new Date() > new Date(item.dataEnd) && item.status != status.done,
+        grey: item.status === status.todo,
+        orange: item.status === status.inprogress,
+        blue: item.status === status.done, 
       };
     },
-  },
-  methods: {
     taskLength(status: status) {
       return this.getFilteredArray(status).length;
     },
@@ -285,9 +274,18 @@ export default defineComponent({
           background-color: black;
           color: white;
         }
-      }
-      .grey {
-        background: black;
+        &.grey {
+          background: rgb(158, 156, 156);
+        }
+        &.failed {
+          background: red;
+        }
+        &.orange {
+          background: orange;
+        }
+        &.blue {
+          background: #c1c1f5;
+        }
       }
     }
   }
