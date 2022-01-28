@@ -74,9 +74,6 @@ export default defineComponent({
           filter: status.done,
         },
       ],
-      toDoList: [] as Array<TasksI>,
-      inProgressList: [] as Array<TasksI>,
-      doneList: [] as Array<TasksI>,
       isOpen: false,
       taskDescription: {} as TasksI,
       search: "",
@@ -94,7 +91,23 @@ export default defineComponent({
   beforeUnmount() {
     this.$emit("tasksGlobal", this.tasks);
   },
-  
+  computed: {
+    toDoList(item: any) {
+      return this.getFilteredArray(status.todo).filter((item: any) => {
+        return item.name.toLowerCase().includes(this.search.toLowerCase());
+      });
+    },
+    inProgressList() {
+      return this.getFilteredArray(status.inprogress).filter((item: any) => {
+        return item.name.toLowerCase().includes(this.search.toLowerCase());
+      });
+    },
+    doneList() {
+      return this.getFilteredArray(status.done).filter((item: any) => {
+        return item.name.toLowerCase().includes(this.search.toLowerCase());
+      });
+    },
+  },
   methods: {
     taskClass(item: TasksI) {
       return {
@@ -102,9 +115,10 @@ export default defineComponent({
           new Date() > new Date(item.dataEnd) && item.status != status.done,
         grey: item.status === status.todo,
         orange: item.status === status.inprogress,
-        blue: item.status === status.done, 
+        blue: item.status === status.done,
       };
     },
+
     taskLength(status: status) {
       return this.getFilteredArray(status).length;
     },
@@ -140,9 +154,9 @@ export default defineComponent({
       }
     },
     createListsData() {
-      this.toDoList = this.getFilteredArray(status.todo);
-      this.inProgressList = this.getFilteredArray(status.inprogress);
-      this.doneList = this.getFilteredArray(status.done);
+      this.toDoList;
+      this.inProgressList;
+      this.doneList;
     },
     taskDetails(item: TasksI) {
       this.taskDescription = item;
@@ -160,7 +174,6 @@ export default defineComponent({
         }
       });
     },
-
     getFilteredArray(status: status) {
       return this.tasks.filter((element: any, key: number) => {
         element.listIndex = key;
@@ -185,6 +198,22 @@ export default defineComponent({
     @media (max-width: 426px) {
       width: 100%;
     }
+  }
+  input {
+    font-family: Helvetica;
+    font-size: 16px;
+    color: #131313;
+    border: 1px solid #bdbdbd;
+    border-radius: 5px;
+    padding: 3px 5px;
+    margin-bottom: 8px;
+  }
+  input:focus {
+    color: #212529;
+    background-color: #fff;
+    border-color: #bdbdbd;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(158, 158, 158, 0.25);
   }
 
   .task-header,
