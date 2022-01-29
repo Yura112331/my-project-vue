@@ -10,34 +10,34 @@
       span.headCaptionCount Cards count: {{taskLength(column.filter)}}
   .task-body
     .task-item(
-      :class="{dropped: checkItems(toDoList)}"
+      :class="{dropped: checkItems(getList(status.todo))}"
       @dragenter.prevent
       @dragover.prevent
       @drop="onDropToDo($event)")
-      p.dropCaption(v-if="checkItems(toDoList)") Drop here...
-      div(v-for="(item, i) in toDoList" :key="'col1'+i" draggable="true" @dragstart="onDrag($event, item.listIndex)")
+      p.dropCaption(v-if="checkItems(getList(status.todo))") Drop here...
+      div(v-for="(item, i) in getList(status.todo)" :key="'col1'+i" draggable="true" @dragstart="onDrag($event, item.listIndex)")
         .status(:class="taskClass(item)")
           p {{ item.name }}
           .data Date of completion {{ item.dataEnd }}
           button.details(v-on:click="taskDetails(item)") Details
     .task-item(
-      :class="{dropped: checkItems(inProgressList)}"
+      :class="{dropped: checkItems(getList(status.inprogress))}"
       @dragenter.prevent
       @dragover.prevent
       @drop="onDropInprogress($event)")
-        p.dropCaption(v-if="checkItems(inProgressList)") Drop here...
-        div(v-for="(item, i) in inProgressList" :key="'col2'+i" draggable="true" @dragstart="onDrag($event, item.listIndex)")
+        p.dropCaption(v-if="checkItems(getList(status.inprogress))") Drop here...
+        div(v-for="(item, i) in getList(status.inprogress)" :key="'col2'+i" draggable="true" @dragstart="onDrag($event, item.listIndex)")
           .status(:class="taskClass(item)")
             p {{ item.name }}
             .data Date of completion {{ item.dataEnd }}
             button.details(v-on:click="taskDetails(item)") Details
     .task-item(
-      :class="{dropped: checkItems(doneList)}"
+      :class="{dropped: checkItems(getList(status.done))}"
       @dragenter.prevent
       @dragover.prevent
       @drop="onDropDone($event)")
-        p.dropCaption(v-if="checkItems(doneList)") Drop here...
-        div(v-for="(item, i) in doneList" :key="'col3'+i")
+        p.dropCaption(v-if="checkItems(getList(status.done))") Drop here...
+        div(v-for="(item, i) in getList(status.done)" :key="'col3'+i")
           .status(:class="taskClass(item)")
             p {{ item.name }}
             .data Date of completion {{ item.dataEnd }}
@@ -79,6 +79,7 @@ export default defineComponent({
       search: "",
       dataSearchTo: "",
       dataSearchFrom: "",
+      status,
     };
   },
   components: {
@@ -91,31 +92,28 @@ export default defineComponent({
   beforeUnmount() {
     this.$emit("tasksGlobal", this.tasks);
   },
-  computed: {
-    toDoList(item: any) {
-      return this.getFilteredArray(status.todo).filter((item: any) => {
-        return item.name.toLowerCase().includes(this.search.toLowerCase());
-      });
-    },
-    inProgressList() {
-      return this.getFilteredArray(status.inprogress).filter((item: any) => {
-        return item.name.toLowerCase().includes(this.search.toLowerCase());
-      });
-    },
-    doneList() {
-      return this.getFilteredArray(status.done).filter((item: any) => {
-        return item.name.toLowerCase().includes(this.search.toLowerCase());
-      });
-    },
-  },
   methods: {
+    getList(status: status) {
+      const startDate = new Date(this.dataSearchFrom);
+      const endDate = new Date(this.dataSearchTo);
+      return this.getFilteredArray(status).filter((item: any) => {
+        return item.name.toLowerCase().includes(this.search.toLowerCase()) && 
+        (+new Date(item.dataEnd) - +startDate >= 0 
+        || isNaN(+new Date(item.dataEnd) - +startDate)) &&
+        (+new Date(item.dataEnd) - +endDate <= 0 
+        || isNaN(+new Date(item.dataEnd) - +endDate))
+      });
+    },
     taskClass(item: TasksI) {
+      const toDay = new Date();
+      const toMorrow = new Date(Date.now() + ( 3600 * 1000 * 24));
       return {
         failed:
           new Date() > new Date(item.dataEnd) && item.status != status.done,
         grey: item.status === status.todo,
-        orange: item.status === status.inprogress,
-        blue: item.status === status.done,
+        yelow: item.status === status.inprogress,
+        green: item.status === status.done,
+        orange:  toDay < new Date(item.dataEnd) && new Date(item.dataEnd) < toMorrow,
       };
     },
 
@@ -154,9 +152,7 @@ export default defineComponent({
       }
     },
     createListsData() {
-      this.toDoList;
-      this.inProgressList;
-      this.doneList;
+      
     },
     taskDetails(item: TasksI) {
       this.taskDescription = item;
@@ -307,13 +303,16 @@ export default defineComponent({
           background: rgb(158, 156, 156);
         }
         &.failed {
-          background: red;
+          background: red !important;
+        }
+        &.yelow {
+          background: yellow;
+        }
+        &.green {
+          background: green;
         }
         &.orange {
-          background: orange;
-        }
-        &.blue {
-          background: #c1c1f5;
+          background: orange !important;
         }
       }
     }
