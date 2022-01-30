@@ -1,9 +1,13 @@
 <template lang="pug">
 .body-content
   h2 KANBAN
-  input(type="text" v-model='search' placeholder='Search name..')
-  input(type="date" v-model='dataSearchFrom' min="2021-11-21" max="2022-12-31")
-  input(type="date" v-model='dataSearchTo' min="2021-11-21" max="2022-12-31")
+  form
+    input(type="text" v-model='search' placeholder='Search name..') 
+    p  Range: from - 
+    input.data(type="date" v-model='dataSearchFrom' min="2021-11-21" max="2022-12-31") 
+    p  Before - 
+    input.data(type="date" v-model='dataSearchTo' min="2021-11-21" max="2022-12-31")
+    button.clear(@click="clearForm()" v-if="search || dataSearchFrom || dataSearchTo") Clear
   .task-header
     .head-item(v-for="(column, i) in kanban" :key="'column_'+i")
       p.headCaption {{column.name}}
@@ -97,23 +101,26 @@ export default defineComponent({
       const startDate = new Date(this.dataSearchFrom);
       const endDate = new Date(this.dataSearchTo);
       return this.getFilteredArray(status).filter((item: any) => {
-        return item.name.toLowerCase().includes(this.search.toLowerCase()) && 
-        (+new Date(item.dataEnd) - +startDate >= 0 
-        || isNaN(+new Date(item.dataEnd) - +startDate)) &&
-        (+new Date(item.dataEnd) - +endDate <= 0 
-        || isNaN(+new Date(item.dataEnd) - +endDate))
+        return (
+          item.name.toLowerCase().includes(this.search.toLowerCase()) &&
+          (+new Date(item.dataEnd) - +startDate >= 0 ||
+            isNaN(+new Date(item.dataEnd) - +startDate)) &&
+          (+new Date(item.dataEnd) - +endDate <= 0 ||
+            isNaN(+new Date(item.dataEnd) - +endDate))
+        );
       });
     },
     taskClass(item: TasksI) {
       const toDay = new Date();
-      const toMorrow = new Date(Date.now() + ( 3600 * 1000 * 24));
+      const toMorrow = new Date(Date.now() + 3600 * 1000 * 24);
       return {
         failed:
           new Date() > new Date(item.dataEnd) && item.status != status.done,
         grey: item.status === status.todo,
         yelow: item.status === status.inprogress,
         green: item.status === status.done,
-        orange:  toDay < new Date(item.dataEnd) && new Date(item.dataEnd) < toMorrow,
+        orange:
+          toDay < new Date(item.dataEnd) && new Date(item.dataEnd) < toMorrow,
       };
     },
 
@@ -151,9 +158,7 @@ export default defineComponent({
         this.createListsData();
       }
     },
-    createListsData() {
-      
-    },
+    createListsData() {},
     taskDetails(item: TasksI) {
       this.taskDescription = item;
       this.isOpen = true;
@@ -176,6 +181,11 @@ export default defineComponent({
         return element.status === status;
       });
     },
+    clearForm() {
+      this.search = "";
+      this.dataSearchTo = "";
+      this.dataSearchFrom = "";
+    },
   },
 });
 </script>
@@ -195,21 +205,50 @@ export default defineComponent({
       width: 100%;
     }
   }
-  input {
-    font-family: Helvetica;
-    font-size: 16px;
-    color: #131313;
-    border: 1px solid #bdbdbd;
-    border-radius: 5px;
-    padding: 3px 5px;
-    margin-bottom: 8px;
-  }
-  input:focus {
-    color: #212529;
-    background-color: #fff;
-    border-color: #bdbdbd;
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(158, 158, 158, 0.25);
+  form {
+    display: flex;
+    flex-direction: row;
+    margin-left: 15px;
+    input {
+      font-family: Helvetica;
+      font-size: 16px;
+      color: #131313;
+      border: 1px solid #bdbdbd;
+      border-radius: 5px;
+      padding: 3px 5px;
+      margin-bottom: 8px;
+
+      &.data {
+        width: 105px;
+        height: 17px;
+        font-size: 12px;
+      }
+    }
+    input:focus {
+      color: #212529;
+      background-color: #fff;
+      border-color: #bdbdbd;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(158, 158, 158, 0.25);
+    }
+    p {
+      font-family: Helvetica;
+      font-size: 16px;
+      color: #131313;
+      line-height: 20px;
+      margin: 0px 5px;
+    }
+    .clear {
+      margin-left: 10px;
+      height: 25px;
+      background-color: rgb(224, 210, 185);
+      border: none;
+      border-radius: 5px;
+      color: black;
+      transition-duration: 0.4s;
+      cursor: pointer;
+    }
+
   }
 
   .task-header,
