@@ -48,10 +48,11 @@ export default defineComponent({
       this.$emit('closeDetails');
     },
     editShow() {
-      this.show=!this.show 
-      this.editTask.title = this.taskDetails.title
-      this.editTask.dataEnd = this.taskDetails.dataEnd
-      this.editTask.name = this.taskDetails.name
+      this.show=!this.show;
+      this.editTask.title = this.taskDetails.title;
+      this.editTask.dataEnd = this.taskDetails.dataEnd;
+      this.editTask.name = this.taskDetails.name;
+      this.id = this.tasks.length+1;
     }
   },
 });

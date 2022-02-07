@@ -24,9 +24,9 @@
 <script>
 import { defineComponent } from "vue";
 import { status } from "../enums/EnumStatus";
+import {mapState} from 'vuex';
 export default defineComponent({
   name: "TaskModal",
-  props: ['tasks'],
   data() {
     return {
       nameTask: "",
@@ -36,6 +36,9 @@ export default defineComponent({
       animationClass: false,
     };
   },
+  computed: {
+    ...mapState(['tasks'])
+  },
   methods: {
     addTask(e) {
       e.preventDefault();
@@ -44,10 +47,10 @@ export default defineComponent({
         name: this.nameTask,
         title: this.titleTask,
         dataEnd: this.dataTask,
-        dataCreate: "2021-12-01",
+        dataCreate: Date.now(),
         status: status.todo,
         animationClass: true,
-        id: this.id = this.tasks.length,
+        id: this.id = this.tasks.length+1,
         });
       }
       this.nameTask = "";

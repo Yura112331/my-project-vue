@@ -10,7 +10,6 @@
       .display
         .header
           h3 {{ index+1 }}. {{ task.name }} 
-          .data Date of creation {{ task.dataCreate }}
           .data Date of completion {{ task.dataEnd }}
         p {{ task.title }}
       button.details(v-on:click="taskDetails(task)") Details
@@ -28,8 +27,8 @@ import { defineComponent } from "vue";
 import TaskModal from "../modals/TaskModals.vue";
 import TasksI from "@/types/InterfacesTasks";
 import TaskDetailsModal from "../modals/TaskDetailsModal.vue";
+import {mapState} from 'vuex';
 export default defineComponent({
-  props: ['tasks'],
   name: "Tasks",
   data() {
     return {
@@ -53,8 +52,8 @@ export default defineComponent({
     TaskModal,
     TaskDetailsModal,
    },
-  beforeUnmount() {
-    this.$emit('tasksGlobal', this.tasks);
+  computed: {
+    ...mapState(['tasks'])
   },
   methods: {
     showNew() {
