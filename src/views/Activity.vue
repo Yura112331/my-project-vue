@@ -24,7 +24,7 @@ import {mapState} from 'vuex';
 export default defineComponent({
   name: "Activity",
   computed: {
-    ...mapState(['activity'])
+    ...mapState('activityModule', ['activity'])
   },
   methods: {
     getImage(img: string) {

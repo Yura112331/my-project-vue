@@ -49,6 +49,7 @@
   TaskDetailsModal(
     v-on:closeDetails="closeDetails()",
     :isOpen="isOpen"
+    :showEditButton='showEditButton'
     :taskDetails="taskDescription"
     @saveTask="saveTask($event)"
     )
@@ -70,6 +71,7 @@ export default defineComponent({
       dataSearchTo: "",
       dataSearchFrom: "",
       status,
+      showEditButton: true,
     };
   },
   components: {
@@ -79,11 +81,8 @@ export default defineComponent({
   mounted() {
     this.createListsData();
   },
-  beforeUnmount() {
-    this.$emit("tasksGlobal", this.tasks);
-  },
   computed: {
-    ...mapState(['tasks']),
+    ...mapState('tasksModule', ['tasks']),
     ...mapState(['kanban'])
   },
   methods: {

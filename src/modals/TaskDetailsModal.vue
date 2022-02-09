@@ -19,7 +19,7 @@
 
         .button-form
           button.add-task(v-if="show" v-on:click="$emit('closeDetails')") Cancle
-          button.add-task(v-on:click="editShow()" v-if="show") Edit
+          button.add-task(v-on:click="editShow()" v-if="showEditButton && show") Edit
           button.add-task(v-if="!show" @click="cancleForm()") Cancle
           button.add-task(v-show="!show" @click="saveTask()") Save
 </template>
@@ -27,7 +27,7 @@
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "TaskDetailsModal",
-  props: ["taskDetails", "isOpen"],
+  props: ["taskDetails", "isOpen", "showEditButton"],
   data() {
     return {
       show: true,

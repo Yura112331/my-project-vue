@@ -17,6 +17,7 @@
   TaskDetailsModal( 
     v-on:closeDetails="closeDetails()",
     :isOpen="isOpen"
+    :showEditButton='showEditButton'
     :taskDetails="taskDescription"
     @saveTask="saveTask($event)"
   )
@@ -35,6 +36,7 @@ export default defineComponent({
       newTasks: {} as Array<TasksI>,
       isShow: false,
       isOpen: false,
+      showEditButton: true,
       taskDescription: {} as TasksI,
     };
   },
@@ -53,7 +55,7 @@ export default defineComponent({
     TaskDetailsModal,
    },
   computed: {
-    ...mapState(['tasks'])
+    ...mapState('tasksModule', ['tasks']),
   },
   methods: {
     showNew() {
