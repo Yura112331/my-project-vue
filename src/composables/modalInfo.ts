@@ -1,4 +1,4 @@
-import { ref, computed } from "vue";
+import { ref, computed, provide } from "vue";
 import { useStore } from "vuex";
 import TasksI from "@/types/InterfacesTasks";
 
@@ -23,7 +23,7 @@ export function modalInfo() {
           }
         });
       };
-
+    provide('saveT', saveTask);
     const closeDetails = () => {
         isOpen.value = false;
     };

@@ -14,7 +14,7 @@
         p {{ task.title }}
       button.details(v-on:click="taskDetails(task)") Details
       button(v-on:click.prevent="removeTask(index)") Remove
-  TaskDetailsModall( 
+  TaskDetailsModal( 
     v-on:closeDetails="closeDetails()",
     :isOpen="isOpen"
     :showEditButton='showEditButton'

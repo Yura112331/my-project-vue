@@ -24,11 +24,13 @@
           button.add-task(v-show="!show" @click="saveTask()") Save
 </template>
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, ref, toRefs } from "vue";
+import { useStore } from "vuex";
 export default defineComponent({
   name: "TaskDetailsModal",
   props: ["taskDetails", "isOpen", "showEditButton"],
-  setup() {
+  setup(props) {
+    const taskDetails = toRefs(props);
     const store = useStore();
     let show = ref(true);
     let editTask = ref({
@@ -41,7 +43,8 @@ export default defineComponent({
     };
     const saveTask = () => {
       show.value = true;
-     
+      const saveT = inject('saveT');
+      editTask.value;
     };
     const editShow = () => {
       show.value=!show.value;
