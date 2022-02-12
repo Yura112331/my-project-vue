@@ -28,34 +28,37 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "TaskDetailsModal",
   props: ["taskDetails", "isOpen", "showEditButton"],
-  data() {
+  setup() {
+    const store = useStore();
+    let show = ref(true);
+    let editTask = ref({
+      name: "",
+      title: "",
+      dataEnd: "",
+    });
+    const cancleForm = () => {
+      show.value = true;
+    };
+    const saveTask = () => {
+      show.value = true;
+     
+    };
+    const editShow = () => {
+      show.value=!show.value;
+      editTask.value.title = taskDetails.value.title;
+      editTask.value.dataEnd = taskDetails.value.dataEnd;
+      editTask.value.name = taskDetails.value.name;
+      id = tasks.value.length+1;
+    };
     return {
-      show: true,
-      editTask: {
-        name: "",
-        title: "",
-        dataEnd: "",
-      },
+      editShow,
+      saveTask,
+      cancleForm,
+      editTask,
+      show,
     };
   },
-  methods: {
-    cancleForm() {
-      this.show = true;
-    },
-    saveTask() {
-      this.show = true;
-      this.$emit('saveTask', this.editTask);
-      this.$emit('closeDetails');
-    },
-    editShow() {
-      this.show=!this.show;
-      this.editTask.title = this.taskDetails.title;
-      this.editTask.dataEnd = this.taskDetails.dataEnd;
-      this.editTask.name = this.taskDetails.name;
-      this.id = this.tasks.length+1;
-    }
-  },
-});
+ });
 </script>
 <style lang="scss">
 .modal-details {

@@ -46,7 +46,7 @@
             p {{ item.name }}
             .data Date of completion {{ item.dataEnd }}
             button.details(v-on:click="taskDetails(item)") Details
-  TaskDetailsModal(
+  TaskDetailsModall(
     v-on:closeDetails="closeDetails()",
     :isOpen="isOpen"
     :showEditButton='showEditButton'
@@ -56,50 +56,42 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, computed, ref } from "vue";
 import { status } from "../enums/EnumStatus";
 import TaskModal from "../modals/TaskModals.vue";
 import TaskDetailsModal from "../modals/TaskDetailsModal.vue";
 import TasksI from "@/types/InterfacesTasks";
-import {mapState} from 'vuex';
+import { modalInfo } from "@/composables/modalInfo";
+import {useStore} from 'vuex';
 export default defineComponent({
-  data() {
-    return {
-      isOpen: false,
-      taskDescription: {} as TasksI,
-      search: "",
-      dataSearchTo: "",
-      dataSearchFrom: "",
-      status,
-      showEditButton: true,
+  setup() {
+    const store = useStore();
+    const tasks = computed(() => store.state.tasksModule.tasks);
+    const kanban = computed(() => store.state.kanban);
+    let search: any = ref("");
+    let dataSearchTo: any = ref("");
+    let dataSearchFrom: any = ref("");
+    const getFilteredArray = (status: status) => {
+      return tasks.value.filter((element: any, key: number) => {
+        element.listIndex = key;
+        return element.status === status;
+      });
     };
-  },
-  components: {
-    TaskModal,
-    TaskDetailsModal,
-  },
-  mounted() {
-    this.createListsData();
-  },
-  computed: {
-    ...mapState('tasksModule', ['tasks']),
-    ...mapState(['kanban'])
-  },
-  methods: {
-    getList(status: status) {
-      const startDate = new Date(this.dataSearchFrom);
-      const endDate = new Date(this.dataSearchTo);
-      return this.getFilteredArray(status).filter((item: any) => {
+
+    const getList = (status: status) => {
+      const startDate = new Date(dataSearchFrom.value);
+      const endDate = new Date(dataSearchTo.value);
+      return getFilteredArray(status).filter((item: any) => {
         return (
-          item.name.toLowerCase().includes(this.search.toLowerCase()) &&
+          item.name.toLowerCase().includes(search.value.toLowerCase()) &&
           (+new Date(item.dataEnd) - +startDate >= 0 ||
             isNaN(+new Date(item.dataEnd) - +startDate)) &&
           (+new Date(item.dataEnd) - +endDate <= 0 ||
             isNaN(+new Date(item.dataEnd) - +endDate))
         );
       });
-    },
-    taskClass(item: TasksI) {
+    };
+    const taskClass = (item: TasksI) => {
       const toDay = new Date();
       const toMorrow = new Date(Date.now() + 3600 * 1000 * 24);
       return {
@@ -111,70 +103,66 @@ export default defineComponent({
         orange:
           toDay < new Date(item.dataEnd) && new Date(item.dataEnd) < toMorrow,
       };
-    },
-
-    taskLength(status: status) {
-      return this.getFilteredArray(status).length;
-    },
-    checkItems(items: Array<TasksI>) {
+    };
+    const taskLength = (status: status) => {
+      return getFilteredArray(status).length;
+    };
+    const checkItems = (items: Array<TasksI>) => {
       return !items.length;
-    },
-    onDropToDo(e: DragEvent) {
+    };
+    const onDropToDo = (e: DragEvent) => {
       if (e.dataTransfer) {
         const itemDragIndex = parseInt(e.dataTransfer.getData("dragItem"));
-        this.tasks[itemDragIndex].status = status.todo;
-        this.createListsData();
+        tasks.value[itemDragIndex].status = status.todo;
       }
-    },
-    onDropInprogress(e: DragEvent) {
+    };
+    const onDropInprogress = (e: DragEvent) => {
       if (e.dataTransfer) {
         const itemDragIndex = parseInt(e.dataTransfer.getData("dragItem"));
-        this.tasks[itemDragIndex].status = status.inprogress;
-        this.createListsData();
+        tasks.value[itemDragIndex].status = status.inprogress;
       }
-    },
-    onDrag(e: DragEvent, value: string) {
+    };
+    const onDrag = (e: DragEvent, value: string) => {
       if (e.dataTransfer) {
         e.dataTransfer.dropEffect = "move";
         e.dataTransfer.effectAllowed = "move";
         e.dataTransfer.setData("dragItem", value);
       }
-    },
-    onDropDone(e: DragEvent) {
+    };
+    const onDropDone = (e: DragEvent) => {
       if (e.dataTransfer) {
         const itemDragIndex = parseInt(e.dataTransfer.getData("dragItem"));
-        this.tasks[itemDragIndex].status = status.done;
-        this.createListsData();
+        tasks.value[itemDragIndex].status = status.done;
       }
-    },
-    createListsData() {},
-    taskDetails(item: TasksI) {
-      this.taskDescription = item;
-      this.isOpen = true;
-    },
-    closeDetails() {
-      this.isOpen = false;
-    },
-    saveTask(item: TasksI) {
-      this.tasks.forEach((task: TasksI) => {
-        if (task.id === this.taskDescription.id) {
-          task.title = item.title;
-          task.dataEnd = item.dataEnd;
-          task.name = item.name;
-        }
-      });
-    },
-    getFilteredArray(status: status) {
-      return this.tasks.filter((element: any, key: number) => {
-        element.listIndex = key;
-        return element.status === status;
-      });
-    },
-    clearForm() {
-      this.search = "";
-      this.dataSearchTo = "";
-      this.dataSearchFrom = "";
-    },
+    };
+
+    const clearForm = () => {
+      search
+      dataSearchTo
+      dataSearchFrom
+    };
+    return {
+      clearForm,
+      onDropDone,
+      onDrag,
+      onDropInprogress,
+      onDropToDo,
+      checkItems,
+      taskLength,
+      taskClass,
+      getList,
+      getFilteredArray,
+      dataSearchFrom,
+      dataSearchTo,
+      search,
+      kanban,
+      tasks,
+      ...modalInfo(),
+    }
+  },
+  components: {
+    TaskModal,
+    TaskDetailsModal,
   },
 });
 </script>

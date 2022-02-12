@@ -14,25 +14,29 @@
         v-for="(img, i2) in item.imgs",
         :src="getImage(img)",
         :key="'activity-img' + i2",
-        @click="selectImg(i2)"
+        @click="selectImg(index)"
       )
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import {mapState} from 'vuex';
+import {useStore} from 'vuex';
 export default defineComponent({
   name: "Activity",
-  computed: {
-    ...mapState('activityModule', ['activity'])
-  },
-  methods: {
-    getImage(img: string) {
+  setup() {
+    const store = useStore();
+    const activity = store.state.activityModule.activity;
+    const selectImg = (index: number) => {
+      store.commit('indexNotification', index)
+    };
+    const getImage = (img: string) => {
       return require("@/assets/" + img);
-    },
-    selectImg(index: number) {
-      this.$emit("changeIndex", index);
-    },
+    };
+    return {
+      getImage,
+      selectImg,
+      activity,
+    }
   },
 });
 </script>

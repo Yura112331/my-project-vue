@@ -11,7 +11,7 @@ const vuexLocal = new VuexPersist({
 export default createStore({
   plugins: [vuexLocal.plugin],
   state: {
-    
+    notification: 3,
     kanban: [
       {
         name: "To Do",
@@ -29,6 +29,14 @@ export default createStore({
     
   },
   mutations: {
+    indexNotification(state, index: number) {
+      state.notification = index
+    }
+  },
+  getters: {
+    notification(state) {
+      return state.notification
+    },
   },
   actions: {
   },

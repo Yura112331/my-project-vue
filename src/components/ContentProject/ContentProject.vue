@@ -1,17 +1,12 @@
 <template lang="pug">
 section.body
-  router-view(:tasks="tasks" @changeIndex="conectEvent")
+  router-view
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 export default defineComponent({
   name: "ContentProject",
-  methods: {
-    conectEvent(index: any) {
-      this.$emit('changeIndexNotification', index);
-    },
-  }
 });
 </script>
 

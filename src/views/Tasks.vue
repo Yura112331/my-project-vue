@@ -14,7 +14,7 @@
         p {{ task.title }}
       button.details(v-on:click="taskDetails(task)") Details
       button(v-on:click.prevent="removeTask(index)") Remove
-  TaskDetailsModal( 
+  TaskDetailsModall( 
     v-on:closeDetails="closeDetails()",
     :isOpen="isOpen"
     :showEditButton='showEditButton'
@@ -24,68 +24,48 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, computed, ref, onMounted } from "vue";
 import TaskModal from "../modals/TaskModals.vue";
 import TasksI from "@/types/InterfacesTasks";
 import TaskDetailsModal from "../modals/TaskDetailsModal.vue";
-import {mapState} from 'vuex';
+import { useStore } from "vuex";
+import { modalInfo } from "@/composables/modalInfo";
+import { modalAddTasks } from "@/composables/modalAddTasks";
 export default defineComponent({
   name: "Tasks",
-  data() {
-    return {
-      newTasks: {} as Array<TasksI>,
-      isShow: false,
-      isOpen: false,
-      showEditButton: true,
-      taskDescription: {} as TasksI,
-    };
-  },
-  mounted() {
-    this.tasks.forEach((item: TasksI, index: number) => {
-      setTimeout(() => {
-        item.enableClass = true;
+  setup() {
+    const store = useStore();
+    let newTasks: any = ref({}) ;
+    const tasks = computed(() => store.state.tasksModule.tasks);
+
+    onMounted(() => {
+      tasks.value.forEach((item: TasksI, index: number) => {
+        setTimeout(() => {
+          item.enableClass = true;
+          item.animationClass = false;
+        }, index * 500);
+        item.enableClass = false;
         item.animationClass = false;
-      }, index * 500);
-      item.enableClass = false;
-      item.animationClass = false;
+      });
     });
+    const showChange = () => {
+      newTasks.value = tasks;
+    };
+    const removeTask = (index: number) => {
+      tasks.value.splice(index, 1);
+    };
+    return {
+      removeTask,
+      showChange,
+      tasks,
+      newTasks,
+      ...modalInfo(),
+      ...modalAddTasks(),
+    }
   },
-  components: { 
+  components: {
     TaskModal,
     TaskDetailsModal,
-   },
-  computed: {
-    ...mapState('tasksModule', ['tasks']),
-  },
-  methods: {
-    showNew() {
-      this.isShow = true;
-    },
-    addClose() {
-      this.isShow = false;
-    },
-    showChange() {
-      this.newTasks = this.tasks;
-    },
-    taskDetails(task: TasksI) {
-      this.taskDescription = task;
-      this.isOpen = true;
-    },
-    closeDetails() {
-      this.isOpen = false;
-    },
-    saveTask(item: TasksI) {
-       this.tasks.forEach((task: TasksI) => {
-         if (task.id === this.taskDescription.id) {
-          task.title = item.title
-          task.dataEnd = item.dataEnd
-          task.name = item.name
-         }
-       });
-    },
-    removeTask(index: number) {
-      this.tasks.splice(index, 1);
-    },
   },
 });
 </script>

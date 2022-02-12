@@ -1,9 +1,9 @@
 <template lang="pug">
 .main-page
-  SideBar(:notification="notification")
+  SideBar
   section.content
     HeaderProject
-    ContentProject(@changeIndexNotification="notification = $event")
+    ContentProject
 </template>
 
 <script lang="ts">
@@ -18,12 +18,6 @@ export default defineComponent({
     HeaderProject,
     ContentProject,
   },
-
-  data() {
-    return {
-      notification: 3,
-    }
-  }
 });
 </script>
 

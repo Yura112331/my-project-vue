@@ -23,42 +23,14 @@
 </template>
 <script>
 import { defineComponent } from "vue";
-import { status } from "../enums/EnumStatus";
-import {mapState} from 'vuex';
+import { modalAddTasks } from "@/composables/modalAddTasks";
 export default defineComponent({
   name: "TaskModal",
-  data() {
-    return {
-      nameTask: "",
-      titleTask: "",
-      dataTask: "",
-      enableClass: false,
-      animationClass: false,
-    };
-  },
-  computed: {
-    ...mapState(['tasks'])
-  },
-  methods: {
-    addTask(e) {
-      e.preventDefault();
-      if (this.nameTask && this.titleTask && this.dataTask) {
-        this.tasks.push({
-        name: this.nameTask,
-        title: this.titleTask,
-        dataEnd: this.dataTask,
-        dataCreate: Date.now(),
-        status: status.todo,
-        animationClass: true,
-        id: this.id = this.tasks.length+1,
-        });
-      }
-      this.nameTask = "";
-      this.titleTask = "";
-      this.dataTask = "";
-      this.animationClass = false;
-    },
-  },
+  setup() {
+    return{
+      ...modalAddTasks(),
+    }
+  }
 });
 </script>
 <style lang="scss">

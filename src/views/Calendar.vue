@@ -11,7 +11,7 @@
               p.text-xs.leading-tight.rounded-sm.p-1.mt-0.mb-1(v-for='(attr, index) in attributes' :key='index' v-on:click="taskDetails(task)")
                 | {{ attr.customData.title }} {{ attr.title }}
                 button()
-    TaskDetailsModal(
+    TaskDetailsModall(
      v-on:closeDetails="closeDetails()",
     :isOpen="isOpen",
     :showEditButton='showEditButton'
@@ -20,34 +20,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { status } from "../enums/EnumStatus";
+import { defineComponent, computed, ref, onMounted } from "vue";
 import TaskDetailsModal from "../modals/TaskDetailsModal.vue";
-import TasksI from "@/types/InterfacesTasks";
-import { mapState } from "vuex";
+import { modalInfo } from "@/composables/modalInfo";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "Calendar",
-  data() {
-    return {
-      masks: {
-        weekdays: "WWW",
-      },
-      attributes: [],
-      isOpen: false,
-      showEditButton: false,
-      taskDescription: {} as TasksI,
-      status,
+  setup() {
+    const store = useStore();
+    const tasks = computed(() => store.state.tasksModule.tasks);
+    const masks = {
+      weekdays: "WWW",
     };
-  },
-  components: {
-    TaskDetailsModal,
-  },
-  computed: {
-    ...mapState("tasksModule", ["tasks"]),
-  },
-  created() {
-    this.attributes = this.tasks.map((el: any) => {
+    let attributes: any = ref([]);
+    onMounted(() => {
+      attributes.value = tasks.value.map((el: any) => {
       el.dates = new Date(el.dataCreate);
       el.customData = {
         title: el.name,
@@ -55,16 +43,16 @@ export default defineComponent({
         id: el.id,
       };
       return el;
+      });
     });
+    return {
+      ...modalInfo(),
+      attributes,
+      masks,
+    }
   },
-  methods: {
-    taskDetails(task: TasksI) {
-      this.taskDescription = task;
-      this.isOpen = true;
-    },
-    closeDetails() {
-      this.isOpen = false;
-    },
+  components: {
+    TaskDetailsModal,
   },
 });
 </script>

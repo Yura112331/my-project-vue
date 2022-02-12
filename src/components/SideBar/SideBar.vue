@@ -14,54 +14,44 @@ section.general-menu
     nav.navigation
       ul
         li
-          h3.menu MENU
+          .menu MENU
         li
-          h3(@click="homeClick") Home
+          router-link(:to="{path: '/home'}") Home
         li
-          h3(@click="taskClick") My Tasks
+          router-link(:to="{path: '/tasks'}") My Tasks
         li.text
-          h3(@click="notificationClick") Notifications
+          router-link(:to="{path: '/notification'}") Notifications
           p {{ notification }}
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, computed, ref } from "vue";
+import {useStore} from 'vuex';
 import ProfileSideBar from "./ProfileSideBar.vue";
 export default defineComponent({
   name: "SideBar",
   components: {
     ProfileSideBar,
   },
-  props: {
-    notification: {
-      type: Number,
-      default: 3,
-    },
-  },
+  setup(){
+    const store = useStore();
+    const notification = computed(() => store.state.notification);
+    let CompletedTasks = ref(372);
+    let OpenTasks = ref(11);
 
-  data() {
-    return {
-      CompletedTasks: 372,
-      OpenTasks: 11,
-    };
-  },
-  methods: {
-    setTasks: function () {
-      if (Number(this.OpenTasks) > 0) {
+    const setTasks = () => {
+      if (Number(OpenTasks.value) > 0) {
         if (confirm("Are you sure you want to change the number of tasks?")) {
-          this.CompletedTasks += 1;
-          this.OpenTasks -= 1;
+          CompletedTasks.value += 1;
+          OpenTasks.value -= 1;
         }
       }
-    },
-    homeClick (){
-      this.$router.push('/home')
-    },
-    taskClick (){
-      this.$router.push('/tasks')
-    },
-    notificationClick (){
-      this.$router.push('/notification')
+    };
+    return {
+      setTasks,
+      OpenTasks,
+      CompletedTasks,
+      notification,
     }
   },
 });
@@ -234,7 +224,7 @@ export default defineComponent({
             font-size: 11px;
           }
         }
-        h3 {
+        a {
           font-family: Helvetica;
           font-size: 14px;
           color: #ffffff;
