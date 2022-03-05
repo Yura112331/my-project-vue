@@ -28,7 +28,7 @@ import { defineComponent } from "vue";
 import TaskModal from "../modals/TaskModals.vue";
 import TasksI from "@/types/InterfacesTasks";
 import TaskDetailsModal from "../modals/TaskDetailsModal.vue";
-import {mapState} from 'vuex';
+import {mapState, mapMutations} from 'vuex';
 export default defineComponent({
   name: "Tasks",
   data() {
@@ -58,6 +58,7 @@ export default defineComponent({
     ...mapState('tasksModule', ['tasks']),
   },
   methods: {
+    ...mapMutations('tasksModule', ['removeTask']),
     showNew() {
       this.isShow = true;
     },
@@ -82,9 +83,6 @@ export default defineComponent({
           task.name = item.name
          }
        });
-    },
-    removeTask(index: number) {
-      this.tasks.splice(index, 1);
     },
   },
 });

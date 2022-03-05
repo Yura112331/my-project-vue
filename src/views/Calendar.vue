@@ -8,21 +8,21 @@
           .flex.flex-col.h-full.z-10.overflow-hidden
             span.day-label.text-sm.text-gray-900 {{ day.day }}
             .flex-grow.overflow-y-auto.overflow-x-auto
-              p.text-xs.leading-tight.rounded-sm.p-1.mt-0.mb-1(v-for='(attr, index) in attributes' :key='index' v-on:click="taskDetails(task)")
+              p.text-xs.leading-tight.rounded-sm.p-1.mt-0.mb-1(v-for='(attr, index) in attributes' :key='index')
                 | {{ attr.customData.title }} {{ attr.title }}
-                button()
+                button(v-on:click="taskDetails(tasks)") Details
     TaskDetailsModal(
-     v-on:closeDetails="closeDetails()",
-    :isOpen="isOpen",
-    :showEditButton='showEditButton'
-    :taskDetails="taskDescription"
-  )
+              v-on:closeDetails="closeDetails()",
+              :isOpen="isOpen"
+              :showEditButton='showEditButton'
+              :taskDetails="taskDescription"
+            )
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { status } from "../enums/EnumStatus";
 import TaskDetailsModal from "../modals/TaskDetailsModal.vue";
+import { status } from "../enums/EnumStatus";
 import TasksI from "@/types/InterfacesTasks";
 import { mapState } from "vuex";
 
@@ -35,9 +35,9 @@ export default defineComponent({
       },
       attributes: [],
       isOpen: false,
-      showEditButton: false,
-      taskDescription: {} as TasksI,
+      showEditButton: true,
       status,
+      taskDescription: {} as TasksI,
     };
   },
   components: {
@@ -58,13 +58,14 @@ export default defineComponent({
     });
   },
   methods: {
-    taskDetails(task: TasksI) {
-      this.taskDescription = task;
+    taskDetails(tasks: any) {
+      this.taskDescription = tasks;
       this.isOpen = true;
     },
     closeDetails() {
       this.isOpen = false;
     },
+    
   },
 });
 </script>

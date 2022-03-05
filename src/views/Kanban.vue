@@ -75,7 +75,6 @@ export default defineComponent({
     };
   },
   components: {
-    TaskModal,
     TaskDetailsModal,
   },
   mounted() {

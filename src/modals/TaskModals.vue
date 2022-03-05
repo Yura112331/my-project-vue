@@ -24,7 +24,7 @@
 <script>
 import { defineComponent } from "vue";
 import { status } from "../enums/EnumStatus";
-import {mapState} from 'vuex';
+import {mapState, mapMutations} from 'vuex';
 export default defineComponent({
   name: "TaskModal",
   data() {
@@ -40,10 +40,11 @@ export default defineComponent({
     ...mapState(['tasks'])
   },
   methods: {
+    ...mapMutations(['addNewTask']),
     addTask(e) {
       e.preventDefault();
       if (this.nameTask && this.titleTask && this.dataTask) {
-        this.tasks.push({
+        this.addNewTask({
         name: this.nameTask,
         title: this.titleTask,
         dataEnd: this.dataTask,

@@ -38,6 +38,14 @@ const store: Module<any, any> = {
       },
     ] as Array<TasksI>,
   },
+  mutations: {
+    addNewTask(state, payload) {
+      state.tasks.push(payload);
+    },
+    removeTask(state, i: number) {
+      state.tasks.splice(i, 1);
+    },
+  },
 };
 export default store;
 
