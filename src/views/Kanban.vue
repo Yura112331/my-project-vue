@@ -1,47 +1,55 @@
 <template lang="pug">
 .body-content
   h2 KANBAN
+  form
+    input(type="text" v-model='search' placeholder='Search name..') 
+    p  Range: from - 
+    input.data(type="date" v-model='dataSearchFrom' min="2021-11-21" max="2022-12-31") 
+    p  Before - 
+    input.data(type="date" v-model='dataSearchTo' min="2021-11-21" max="2022-12-31")
+    button.clear(@click="clearForm()" v-if="search || dataSearchFrom || dataSearchTo") Clear
   .task-header
     .head-item(v-for="(column, i) in kanban" :key="'column_'+i")
       p.headCaption {{column.name}}
       span.headCaptionCount Cards count: {{taskLength(column.filter)}}
   .task-body
     .task-item(
-      :class="{dropped: checkItems(toDoList)}"
+      :class="{dropped: checkItems(getList(status.todo))}"
       @dragenter.prevent
       @dragover.prevent
       @drop="onDropToDo($event)")
-      p.dropCaption(v-if="checkItems(toDoList)") Drop here...
-      div(v-for="(item, i) in toDoList" :key="'col1'+i" draggable="true" @dragstart="onDrag($event, item.listIndex)")
-        .status
+      p.dropCaption(v-if="checkItems(getList(status.todo))") Drop here...
+      div(v-for="(item, i) in getList(status.todo)" :key="'col1'+i" draggable="true" @dragstart="onDrag($event, item.listIndex)")
+        .status(:class="taskClass(item)")
           p {{ item.name }}
           .data Date of completion {{ item.dataEnd }}
           button.details(v-on:click="taskDetails(item)") Details
     .task-item(
-      :class="{dropped: checkItems(inProgressList)}"
+      :class="{dropped: checkItems(getList(status.inprogress))}"
       @dragenter.prevent
       @dragover.prevent
       @drop="onDropInprogress($event)")
-        p.dropCaption(v-if="checkItems(inProgressList)") Drop here...
-        div(v-for="(item, i) in inProgressList" :key="'col2'+i" draggable="true" @dragstart="onDrag($event, item.listIndex)")
-          .status
+        p.dropCaption(v-if="checkItems(getList(status.inprogress))") Drop here...
+        div(v-for="(item, i) in getList(status.inprogress)" :key="'col2'+i" draggable="true" @dragstart="onDrag($event, item.listIndex)")
+          .status(:class="taskClass(item)")
             p {{ item.name }}
             .data Date of completion {{ item.dataEnd }}
             button.details(v-on:click="taskDetails(item)") Details
     .task-item(
-      :class="{dropped: checkItems(doneList)}"
+      :class="{dropped: checkItems(getList(status.done))}"
       @dragenter.prevent
       @dragover.prevent
       @drop="onDropDone($event)")
-        p.dropCaption(v-if="checkItems(doneList)") Drop here...
-        div(v-for="(item, i) in doneList" :key="'col3'+i")
-          .status
+        p.dropCaption(v-if="checkItems(getList(status.done))") Drop here...
+        div(v-for="(item, i) in getList(status.done)" :key="'col3'+i")
+          .status(:class="taskClass(item)")
             p {{ item.name }}
             .data Date of completion {{ item.dataEnd }}
             button.details(v-on:click="taskDetails(item)") Details
   TaskDetailsModal(
     v-on:closeDetails="closeDetails()",
     :isOpen="isOpen"
+    :showEditButton='showEditButton'
     :taskDetails="taskDescription"
     @saveTask="saveTask($event)"
     )
@@ -53,42 +61,57 @@ import { status } from "../enums/EnumStatus";
 import TaskModal from "../modals/TaskModals.vue";
 import TaskDetailsModal from "../modals/TaskDetailsModal.vue";
 import TasksI from "@/types/InterfacesTasks";
+import {mapState} from 'vuex';
 export default defineComponent({
-  props: ['tasks'],
   data() {
     return {
-      kanban: [
-        {
-          name: "To Do",
-          filter: status.todo,
-        },
-        {
-          name: "In Progress",
-          filter: status.inprogress,
-        },
-        {
-          name: "Done",
-          filter: status.done,
-        },
-      ],
-      toDoList: [] as Array<TasksI>,
-      inProgressList: [] as Array<TasksI>,
-      doneList: [] as Array<TasksI>,
       isOpen: false,
       taskDescription: {} as TasksI,
+      search: "",
+      dataSearchTo: "",
+      dataSearchFrom: "",
+      status,
+      showEditButton: true,
     };
   },
   components: {
-    TaskModal,
     TaskDetailsModal,
   },
   mounted() {
     this.createListsData();
   },
-   beforeUnmount() {
-    this.$emit('tasksGlobal', this.tasks);
+  computed: {
+    ...mapState('tasksModule', ['tasks']),
+    ...mapState(['kanban'])
   },
   methods: {
+    getList(status: status) {
+      const startDate = new Date(this.dataSearchFrom);
+      const endDate = new Date(this.dataSearchTo);
+      return this.getFilteredArray(status).filter((item: any) => {
+        return (
+          item.name.toLowerCase().includes(this.search.toLowerCase()) &&
+          (+new Date(item.dataEnd) - +startDate >= 0 ||
+            isNaN(+new Date(item.dataEnd) - +startDate)) &&
+          (+new Date(item.dataEnd) - +endDate <= 0 ||
+            isNaN(+new Date(item.dataEnd) - +endDate))
+        );
+      });
+    },
+    taskClass(item: TasksI) {
+      const toDay = new Date();
+      const toMorrow = new Date(Date.now() + 3600 * 1000 * 24);
+      return {
+        failed:
+          new Date() > new Date(item.dataEnd) && item.status != status.done,
+        grey: item.status === status.todo,
+        yelow: item.status === status.inprogress,
+        green: item.status === status.done,
+        orange:
+          toDay < new Date(item.dataEnd) && new Date(item.dataEnd) < toMorrow,
+      };
+    },
+
     taskLength(status: status) {
       return this.getFilteredArray(status).length;
     },
@@ -123,11 +146,7 @@ export default defineComponent({
         this.createListsData();
       }
     },
-    createListsData() {
-      this.toDoList = this.getFilteredArray(status.todo);
-      this.inProgressList = this.getFilteredArray(status.inprogress);
-      this.doneList = this.getFilteredArray(status.done);
-    },
+    createListsData() {},
     taskDetails(item: TasksI) {
       this.taskDescription = item;
       this.isOpen = true;
@@ -136,19 +155,24 @@ export default defineComponent({
       this.isOpen = false;
     },
     saveTask(item: TasksI) {
-       this.tasks.forEach((task: TasksI) => {
-         if (task.id === this.taskDescription.id) {
-          task.title = item.title
-          task.dataEnd = item.dataEnd
-          task.name = item.name
-         }
-       });
+      this.tasks.forEach((task: TasksI) => {
+        if (task.id === this.taskDescription.id) {
+          task.title = item.title;
+          task.dataEnd = item.dataEnd;
+          task.name = item.name;
+        }
+      });
     },
     getFilteredArray(status: status) {
       return this.tasks.filter((element: any, key: number) => {
         element.listIndex = key;
         return element.status === status;
       });
+    },
+    clearForm() {
+      this.search = "";
+      this.dataSearchTo = "";
+      this.dataSearchFrom = "";
     },
   },
 });
@@ -164,6 +188,55 @@ export default defineComponent({
     font-size: 20px;
     color: #131313;
     font-weight: 600;
+
+    @media (max-width: 426px) {
+      width: 100%;
+    }
+  }
+  form {
+    display: flex;
+    flex-direction: row;
+    margin-left: 15px;
+    input {
+      font-family: Helvetica;
+      font-size: 16px;
+      color: #131313;
+      border: 1px solid #bdbdbd;
+      border-radius: 5px;
+      padding: 3px 5px;
+      margin-bottom: 8px;
+
+      &.data {
+        width: 105px;
+        height: 17px;
+        font-size: 12px;
+      }
+    }
+    input:focus {
+      color: #212529;
+      background-color: #fff;
+      border-color: #bdbdbd;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem rgba(158, 158, 158, 0.25);
+    }
+    p {
+      font-family: Helvetica;
+      font-size: 16px;
+      color: #131313;
+      line-height: 20px;
+      margin: 0px 5px;
+    }
+    .clear {
+      margin-left: 10px;
+      height: 25px;
+      background-color: rgb(224, 210, 185);
+      border: none;
+      border-radius: 5px;
+      color: black;
+      transition-duration: 0.4s;
+      cursor: pointer;
+    }
+
   }
 
   .task-header,
@@ -187,8 +260,16 @@ export default defineComponent({
         color: #131313;
         background: burlywood;
         padding: 5px 10px;
+
+        @media (max-width: 426px) {
+          font-size: 10px;
+        }
       }
     }
+  }
+  @media (max-width: 426px) {
+    padding: 0px;
+    width: 350px;
   }
 }
 
@@ -211,7 +292,6 @@ export default defineComponent({
 
     div {
       .status {
-        background-color: rgb(235, 231, 225);
         margin-top: 10px;
         padding: 10px;
         border-radius: 5px;
@@ -245,6 +325,21 @@ export default defineComponent({
         button:hover {
           background-color: black;
           color: white;
+        }
+        &.grey {
+          background: rgb(158, 156, 156);
+        }
+        &.failed {
+          background: red !important;
+        }
+        &.yelow {
+          background: yellow;
+        }
+        &.green {
+          background: green;
+        }
+        &.orange {
+          background: orange !important;
         }
       }
     }

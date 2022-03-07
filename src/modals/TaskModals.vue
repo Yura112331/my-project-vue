@@ -24,9 +24,9 @@
 <script>
 import { defineComponent } from "vue";
 import { status } from "../enums/EnumStatus";
+import {mapState, mapMutations} from 'vuex';
 export default defineComponent({
   name: "TaskModal",
-  props: ['tasks'],
   data() {
     return {
       nameTask: "",
@@ -36,18 +36,22 @@ export default defineComponent({
       animationClass: false,
     };
   },
+  computed: {
+    ...mapState(['tasks'])
+  },
   methods: {
+    ...mapMutations(['addNewTask']),
     addTask(e) {
       e.preventDefault();
       if (this.nameTask && this.titleTask && this.dataTask) {
-        this.tasks.push({
+        this.addNewTask({
         name: this.nameTask,
         title: this.titleTask,
         dataEnd: this.dataTask,
-        dataCreate: "2021-12-01",
+        dataCreate: Date.now(),
         status: status.todo,
         animationClass: true,
-        id: this.id = this.tasks.length,
+        id: this.id = this.tasks.length+1,
         });
       }
       this.nameTask = "";

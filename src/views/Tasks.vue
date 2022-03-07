@@ -10,7 +10,6 @@
       .display
         .header
           h3 {{ index+1 }}. {{ task.name }} 
-          .data Date of creation {{ task.dataCreate }}
           .data Date of completion {{ task.dataEnd }}
         p {{ task.title }}
       button.details(v-on:click="taskDetails(task)") Details
@@ -18,6 +17,7 @@
   TaskDetailsModal( 
     v-on:closeDetails="closeDetails()",
     :isOpen="isOpen"
+    :showEditButton='showEditButton'
     :taskDetails="taskDescription"
     @saveTask="saveTask($event)"
   )
@@ -28,14 +28,15 @@ import { defineComponent } from "vue";
 import TaskModal from "../modals/TaskModals.vue";
 import TasksI from "@/types/InterfacesTasks";
 import TaskDetailsModal from "../modals/TaskDetailsModal.vue";
+import {mapState, mapMutations} from 'vuex';
 export default defineComponent({
-  props: ['tasks'],
   name: "Tasks",
   data() {
     return {
       newTasks: {} as Array<TasksI>,
       isShow: false,
       isOpen: false,
+      showEditButton: true,
       taskDescription: {} as TasksI,
     };
   },
@@ -53,10 +54,11 @@ export default defineComponent({
     TaskModal,
     TaskDetailsModal,
    },
-  beforeUnmount() {
-    this.$emit('tasksGlobal', this.tasks);
+  computed: {
+    ...mapState('tasksModule', ['tasks']),
   },
   methods: {
+    ...mapMutations('tasksModule', ['removeTask']),
     showNew() {
       this.isShow = true;
     },
@@ -81,9 +83,6 @@ export default defineComponent({
           task.name = item.name
          }
        });
-    },
-    removeTask(index: number) {
-      this.tasks.splice(index, 1);
     },
   },
 });
